@@ -1,0 +1,137 @@
+{% load static %}
+  <nav class="sidebar sidebar-offcanvas" id="sidebar">
+  {% if user.is_anonymous %}
+    <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
+      Siz Hesab Yaratmali Ve Ya Giris Etmelisiniz
+    </div>
+  {% else %}
+    <div class="text-center sidebar-brand-wrapper d-flex align-items-center">
+      {% if user.is_superuser == True %}
+        <a class="sidebar-brand brand-logo" href="{% url 'account:admin_panel' %}"><img src="{% static 'images/logo.svg' %} "alt="logo" /></a>
+      {% else %}
+        <a class="sidebar-brand brand-logo" href="{% url 'doctor:panel' user.id %}"><img src="{% static 'images/logo.svg' %}" alt="logo" /></a>
+      {% endif %}
+    </div>
+      <ul class="nav">
+        <li class="nav-item nav-profile">
+          <a href="#" class="nav-link">
+            <div class="nav-profile-image">
+              <img src="{% static 'images/faces/face1.jpg' %}" alt="profile" />
+              <span class="login-status online"></span>
+              <!--change to offline or busy as needed-->
+            </div>
+
+            <div class="nav-profile-text d-flex flex-column pr-3">
+              {% if user.is_staff == True %}
+                <span class="font-weight-medium mb-2">Siz Adminsiniz</span>
+                <span class="font-weight-medium mb-2">{{user.email}}</span>
+              {% else %}
+                <span class="font-weight-medium mb-2">Siz Doctorsunuz</span>
+                <span class="font-weight-medium mb-2">{{user.email}}</span>
+              {% endif %}
+            </div>
+            <span class="badge badge-danger text-white ml-3 rounded">3</span>
+          </a>
+        </li>
+        {% if user.user_doctors %}
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'doctor:panel' user.id %}">
+                <i class="mdi mdi-home menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'doctor:patients' user.id %}">
+                  <i class="mdi mdi-account-multiple menu-icon"></i>
+                  <span class="menu-title">Size Aid Olan Patient'ler</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'doctor:operations' user.id %}">
+                  <i class="mdi mdi-briefcase-outline menu-icon"></i>
+                  <span class="menu-title">Size Aid Olan Emeliyyatlar</span>
+                </a>
+              </li>
+
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'account:admin_panel' %}">
+              <i class="mdi mdi-home menu-icon"></i>
+              <span class="menu-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'doctor:list' %}">
+              <i class="mdi mdi-contacts menu-icon"></i>
+              <span class="menu-title">Hekimler</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'patient:list' %}">
+              <i class="mdi mdi-account-multiple menu-icon"></i>
+              <span class="menu-title">Patient'ler</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'disease:list' %}">
+              <i class="mdi mdi-briefcase-outline menu-icon"></i>
+              <span class="menu-title">Emeliyyatlar</span>
+            </a>
+          </li>
+
+
+        {% endif %}
+        
+        {% comment %} <li class="nav-item">
+          <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false" aria-controls="ui-basic">
+            <i class="mdi mdi-crosshairs-gps menu-icon"></i>
+            <span class="menu-title">Basic UI Elements</span>
+            <i class="menu-arrow"></i>
+          </a>
+          <div class="collapse" id="ui-basic">
+            <ul class="nav flex-column sub-menu">
+              <li class="nav-item">
+                <a class="nav-link" href="pages/ui-features/buttons.html">Buttons</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pages/ui-features/dropdowns.html">Dropdowns</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="pages/ui-features/typography.html">Typography</a>
+              </li>
+            </ul>
+          </div>
+        </li> {% endcomment %}
+
+        {% comment %} <li class="nav-item">
+          <a class="nav-link" href="pages/tables/basic-table.html">
+            <i class="mdi mdi-table-large menu-icon"></i>
+            <span class="menu-title">Tables</span>
+          </a>
+        </li> {% endcomment %}
+        {% comment %} <li class="nav-item">
+          <span class="nav-link" href="#">
+            <span class="menu-title">Docs</span>
+          </span>
+        </li> {% endcomment %}
+        {% comment %} <li class="nav-item">
+          <a class="nav-link" href="https://www.bootstrapdash.com/demo/breeze-free/documentation/documentation.html">
+            <i class="mdi mdi-file-document-box menu-icon"></i>
+            <span class="menu-title">Documentation</span>
+          </a>
+        </li> {% endcomment %}
+        <li class="nav-item sidebar-actions">
+          <div class="nav-link">
+            <div class="mt-4">
+              {% comment %} <div class="border-none">
+                <p class="text-black">Notification</p>
+              </div> {% endcomment %}
+              <ul class="mt-4 pl-0">
+                <li>Sign Out</li>
+              </ul>
+            </div>
+          </div>
+        </li>
+      </ul>
+  {% endif %}
+</nav>

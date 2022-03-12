@@ -1,0 +1,34 @@
+th {
+    text-align: center;
+}
+
+td {
+    white-space: normal !important; 
+    word-wrap: break-word; 
+    padding: 10px !important;
+    text-align: center;
+}
+
+.card-body.px-0.overflow-auto{
+    padding: 20px 30px !important;
+}
+
+table {
+    table-layout: fixed;
+}
+
+.form-check-label {
+    margin-left: 0 !important;
+}
+
+.mdi-check {
+    margin-right:10px;
+}
+
+.list-time{
+    margin-left: 60px !important;
+}
+
+.btn.btn-sm.ml-3.btn-success {
+    height: 100%;
+}

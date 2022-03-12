@@ -1,0 +1,15 @@
+.col-xl-4.col-md-6.stretch-card.grid-margin.grid-margin-sm-0.pb-sm-3 {
+    padding-right: 0;
+}
+.dropdown {
+    margin-left: 30px;
+}
+
+
+/* .datepicker.datepicker-dropdown .datepicker-days table.table-condensed thead tr th.dow:first-child, .datepicker.datepicker-inline .datepicker-days table.table-condensed thead tr th.dow:first-child{
+    text-align: center;
+} */
+
+.row.informations {
+    margin: 0;
+}
