@@ -600,7 +600,7 @@
                             <div class="col-sm-9">
                               <select class="form-control" name="gender" >
                                 {% for gender in gender_choices %}
-                                  <option value="{{ gender }}">{{gender}}</option>
+                                  <option value="{{gender.id}}">{{gender.name}}</option>
                                 {% endfor %}
                               </select>
                             </div>
@@ -635,10 +635,9 @@
                           <div class="form-group row">
                             <div class="col-sm-9">
                               <select class="form-control" name="blood_type">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                                {% for blood_type in blood_type_choices %}
+                                  <option value="{{blood_type.id}}">{{blood_type}}</option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>

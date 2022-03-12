@@ -4,35 +4,32 @@ from phonenumber_field.modelfields import PhoneNumberField
 
 # Create your models here.
 
+
+class BloodTypeModel(models.Model):
+    name = models.CharField(max_length=10)
+
+    def __str__(self):
+        return self.name
+
+class GenderModel(models.Model):
+    name = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.name
+
 class PatientModel(models.Model):
-
-    BLOOD_TYPE_CHOICES = [
-        ("A+","A+"),
-        ("A-","A-"),
-        ("B+","B+"),
-        ("B-","B-"),
-        ("O+","O+"),
-        ("O-","O-"),
-        ("AB+","AB+"),
-        ("AB-","AB-"),
-    ]
-
-    GENDER_CHOICES = [
-        ("Male","Male"),
-        ("Female","Female"),
-    ]
 
     first_name = models.CharField(max_length=30, verbose_name="Ad:",null=False,blank=False)
     last_name = models.CharField(max_length=40,verbose_name="Soyadi:",null=False,blank=False)
-    gender = models.CharField(choices=GENDER_CHOICES,max_length=6)
     phonenumber = PhoneNumberField(blank=True,null=True,unique=True)
     joining_date = models.DateTimeField(auto_now_add=True,verbose_name="Giris Tarixi:")
     expected_discharging_date = models.DateTimeField(verbose_name="Gozlenilen Cixis Tarixi:",null=True,blank=True)
     discharged_date = models.DateTimeField(verbose_name="Cixis Tarixi:",null=True,blank=True)
     born_date = models.DateField(verbose_name="Dogum Tarixi:")
-    blood_type = models.CharField(choices=BLOOD_TYPE_CHOICES,max_length=10)
     additional_information = models.TextField(null=True,blank=True)
     disease = models.ManyToManyField("disease.DiseaseModel",related_name="disease_patients")
+    blood_type = models.ForeignKey(BloodTypeModel,on_delete=models.CASCADE)
+    gender = models.ForeignKey(GenderModel,on_delete=models.CASCADE)
     is_active = models.BooleanField(default=True)
 
     def get_full_name(self):
