@@ -17,6 +17,13 @@
     <link rel="stylesheet" href="{% static 'css/operation_detail.css' %}">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="{% static 'css/create_operation.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
+    <link rel="stylesheet" href="{% static 'css/create_operation.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     
   </head>
   <body>
@@ -583,7 +590,7 @@
                           <label class="col-sm-6 col-form-label">Telefon Nomreniz</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" name="phonenumber" />
+                              <input type="text" id="phone" class="form-control" name="phonenumber" />
                             </div>
                           </div>
                         </div>
@@ -592,10 +599,9 @@
                           <div class="form-group row">
                             <div class="col-sm-9">
                               <select class="form-control" name="gender" >
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                                {% for gender in gender_choices %}
+                                  <option value="{{ gender }}">{{gender}}</option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -641,7 +647,7 @@
                           <label class="col-sm-6 col-form-label">Dogum Tarixi</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input class="form-control" placeholder="dd/mm/yyyy" name="born_date" />
+                              <input class="form-control"  type="datetime-local"  placeholder="dd/mm/yyyy" name="born_date" id="datepicker" />
                             </div>
                           </div>
                         </div>
@@ -689,7 +695,7 @@
                             <label class="col-sm-12 col-form-label">Gozlenilen Cixis Tarixi</label>
                             <div class="form-group row">
                               <div class="col-sm-12">
-                                <input class="form-control" placeholder="dd/mm/yyyy" name="expected_discharging_date" />
+                                <input class="form-control" type="datetime-local" placeholder="dd/mm/yyyy" name="expected_discharging_date" id="datetimepicker" />
                               </div>
                             </div>
                           </div>
@@ -700,10 +706,9 @@
                             <div class="form-group row">
                               <div class="col-sm-12">
                                 <select class="form-control multiple-select" name="disease[]" multiple="multiple">
-                                  <option>Category1</option>
-                                  <option>Category2</option>
-                                  <option>Category3</option>
-                                  <option>Category4</option>
+                                  {% for disease in diseases %}
+                                    <option value="{{disease.id}}"> {{disease.name}} </option>
+                                  {% endfor %}
                                 </select>
                               </div>
                             </div>
@@ -1253,6 +1258,46 @@
       });
 
 
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+      config = {
+        // enableTime: true,
+        // dateFormat: "Y-m-d H:i",
+        // altInput: true,
+        // altFormat: "F j, Y (h:s K)"
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        altFormat: "F j, Y",
+
+      }
+      config2 = {
+        // enableTime: true,
+        // dateFormat: "Y-m-d H:i",
+        // altInput: true,
+        // altFormat: "F j, Y (h:s K)"
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        altFormat: "F j, Y",
+        time_24hr: true 
+        
+      }
+
+      flatpickr("#datepicker", config);
+      flatpickr("#datetimepicker",config2)
+      
+
+      //number country
+      const phoneInputField = document.querySelector("#phone");
+      const phoneInput = window.intlTelInput(phoneInputField, {
+        preferredCountries: ["az", "co", "in", "de"],
+        utilsScript:
+          "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+      });
+
+      
     </script>
 
   </body>

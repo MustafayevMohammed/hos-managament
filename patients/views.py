@@ -1,7 +1,7 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-from disease.models import OperationModel
+from disease.models import DiseaseModel, OperationModel
 from patients.forms import CreatePatientForm
 from patients.models import PatientModel, PeopleWithPatientModel
 from doctors.models import DoctorModel
@@ -48,16 +48,31 @@ class PatientPanelView(LoginRequiredMixin,View):
         }
         return render(request,"patient_panel.html",context)
 
-
-
-def create_patient(request):
+class PatientCreateView(View):
     form = CreatePatientForm
-    return render(request,"create_patient.html")
+
+    def get(self, request):
+        gender_choices = PatientModel.GENDER_CHOICES
+        blood_type_choices = PatientModel.BLOOD_TYPE_CHOICES
+        diseases = DiseaseModel.objects.all()
+        for gender in gender_choices:
+            print(gender)
+        context = {
+            "gender_choices":gender_choices,
+            "blood_type_choices":blood_type_choices,
+            "diseases":diseases,
+        }
+        return render(request,"create_patient.html",context)
+
+    def post(self, request):
+        pass
+
+
 
 def add_patient_status(request,id):
     return render(request,"add_patient_status.html")
 
-def patient_edit(request):
+def patient_edit(request,id):
     return render(request,"patient_edit.html")
 
 def ppl_with_patient(request,id):
