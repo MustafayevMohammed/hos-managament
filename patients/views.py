@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.views import View
 from disease.models import DiseaseModel, OperationModel
 from patients.forms import CreatePatientForm
-from patients.models import PatientModel, PeopleWithPatientModel
+from patients.models import PatientModel, PeopleWithPatientModel, BloodTypeModel, GenderModel
 from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
@@ -49,14 +49,12 @@ class PatientPanelView(LoginRequiredMixin,View):
         return render(request,"patient_panel.html",context)
 
 class PatientCreateView(View):
-    form = CreatePatientForm
 
     def get(self, request):
-        gender_choices = PatientModel.GENDER_CHOICES
-        blood_type_choices = PatientModel.BLOOD_TYPE_CHOICES
+        gender_choices = GenderModel.objects.all()
+        blood_type_choices = BloodTypeModel.objects.all()
         diseases = DiseaseModel.objects.all()
-        for gender in gender_choices:
-            print(gender)
+
         context = {
             "gender_choices":gender_choices,
             "blood_type_choices":blood_type_choices,
@@ -64,8 +62,27 @@ class PatientCreateView(View):
         }
         return render(request,"create_patient.html",context)
 
+
     def post(self, request):
-        pass
+        form = CreatePatientForm(request.POST)
+        print(form.errors)
+
+        if form.is_valid():
+            data = PatientModel()
+            data.first_name = form.cleaned_data["first_name"]
+            data.last_name = form.cleaned_data["last_name"]
+            data.phonenumber = form.cleaned_data["phonenumber"].as_e164
+            data.gender = form.cleaned_data["gender"]
+            data.blood_type = form.cleaned_data["blood_type"][0]
+            data.born_date = form.cleaned_data["born_date"]
+            data.expected_discharging_date = form.cleaned_data["expected_discharging_date"]
+            data.disease = form.cleaned_data["disease"]
+            data.additional_information = form.cleaned_data["additional_information"]
+            data.save()
+            data.save_m2m()
+            return redirect("/")
+        else:
+            return redirect("doctor:panel",2)
 
 
 
