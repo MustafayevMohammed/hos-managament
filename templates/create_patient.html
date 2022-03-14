@@ -534,7 +534,7 @@
                 <div class="card">
                   <div class="card-body">
                     {% comment %} <h4 class="card-title">Horizontal Two column</h4> {% endcomment %}
-                    <form class="form-sample" method="post" action="">
+                    <form class="form-sample" method="post" action="" enctype="multipart/form-data">
                       {% csrf_token %}
                       {% comment %} <p class="card-description">Personal info</p> {% endcomment %}
                       <div class="row">
@@ -542,6 +542,12 @@
                           <label class="col-sm-6 col-form-label">First Name</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
+                              {% if form.first_name.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.first_name.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
                               <input type="text" class="form-control" name="first_name" />
                             </div>
                           </div>
@@ -550,6 +556,12 @@
                           <label class="col-sm-6 col-form-label">Last Name</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
+                              {% if form.last_name.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.last_name.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
                               <input type="text" class="form-control" name="last_name" />
                             </div>
                           </div>
@@ -590,7 +602,13 @@
                           <label class="col-sm-6 col-form-label">Telefon Nomreniz</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input type="text" id="phone" class="form-control" name="phonenumber" />
+                              {% if form.phonenumber.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.phonenumber.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input type="tel" id="phone" class="form-control" name="phonenumber" />
                             </div>
                           </div>
                         </div>
@@ -598,6 +616,12 @@
                           <label class="col-sm-9 col-form-label">Gender</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
+                              {% if form.gender.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.gender.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
                               <select class="form-control" name="gender" >
                                 {% for gender in gender_choices %}
                                   <option value="{{gender.id}}">{{gender.name}}</option>
@@ -634,6 +658,12 @@
                           <label class="col-sm-6 col-form-label">Blood Type</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
+                              {% if form.blood_type.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.blood_type.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
                               <select class="form-control" name="blood_type">
                                 {% for blood_type in blood_type_choices %}
                                   <option value="{{blood_type.id}}">{{blood_type}}</option>
@@ -646,6 +676,12 @@
                           <label class="col-sm-6 col-form-label">Dogum Tarixi</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
+                              {% if form.born_date.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.born_date.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
                               <input class="form-control"  type="datetime-local"  placeholder="dd/mm/yyyy" name="born_date" id="datepicker" />
                             </div>
                           </div>
@@ -694,6 +730,12 @@
                             <label class="col-sm-12 col-form-label">Gozlenilen Cixis Tarixi</label>
                             <div class="form-group row">
                               <div class="col-sm-12">
+                                {% if form.expected_discharging_date.errors %}
+                                  <div class="error alert alert-danger">
+                                    {{form.expected_discharging_date.errors}}
+                                  </div>
+                                {% else %}
+                                {% endif %}
                                 <input class="form-control" type="datetime-local" placeholder="dd/mm/yyyy" name="expected_discharging_date" id="datetimepicker" />
                               </div>
                             </div>
@@ -704,7 +746,13 @@
                             <label class="col-sm-12 col-form-label">Disease(s)</label>
                             <div class="form-group row">
                               <div class="col-sm-12">
-                                <select class="form-control multiple-select" name="disease[]" multiple="multiple">
+                                {% if form.disease.errors %}
+                                  <div class="error alert alert-danger">
+                                    {{form.disease.errors}}
+                                  </div>
+                                {% else %}
+                                {% endif %}
+                                <select class="form-control multiple-select" name="disease" multiple="multiple">
                                   {% for disease in diseases %}
                                     <option value="{{disease.id}}"> {{disease.name}} </option>
                                   {% endfor %}
@@ -739,6 +787,12 @@
                         <div class="col-md-12">
                           <div class="form-group">
                             <label for="exampleTextarea1">Patient Haqqinda Elave Melumat</label>
+                            {% if form.additional_information.errors %}
+                              <div class="error alert alert-danger">
+                                {{form.additional_information.errors}}
+                              </div>
+                            {% else %}
+                            {% endif %}
                             <textarea
                               class="form-control"
                               id="exampleTextarea1"
@@ -1295,6 +1349,12 @@
         utilsScript:
           "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
       });
+      $("form").submit(function() {
+        var full_number = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
+      $("input[name='phonenumber'").val(full_number);
+        alert(full_number)
+  
+});
 
       
     </script>

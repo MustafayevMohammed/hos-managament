@@ -34,3 +34,8 @@
 .d-date {
     padding-left: 0 !important;
 }
+
+.error{
+    padding: 2px 3px 3px !important;
+    margin-bottom: 5px !important;
+}   

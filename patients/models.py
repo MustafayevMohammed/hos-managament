@@ -1,5 +1,5 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
+# from phonenumber_field.modelfields import PhoneNumberField
 # from disease.models import DiseaseModel
 
 # Create your models here.
@@ -21,7 +21,7 @@ class PatientModel(models.Model):
 
     first_name = models.CharField(max_length=30, verbose_name="Ad:",null=False,blank=False)
     last_name = models.CharField(max_length=40,verbose_name="Soyadi:",null=False,blank=False)
-    phonenumber = PhoneNumberField(blank=True,null=True,unique=True)
+    phonenumber = models.CharField(blank=True,null=True,unique=True,max_length=20)
     joining_date = models.DateTimeField(auto_now_add=True,verbose_name="Giris Tarixi:")
     expected_discharging_date = models.DateTimeField(verbose_name="Gozlenilen Cixis Tarixi:",null=True,blank=True)
     discharged_date = models.DateTimeField(verbose_name="Cixis Tarixi:",null=True,blank=True)
