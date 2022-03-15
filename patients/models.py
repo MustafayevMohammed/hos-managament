@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 # from phonenumber_field.modelfields import PhoneNumberField
 # from disease.models import DiseaseModel
 
@@ -35,8 +36,13 @@ class PatientModel(models.Model):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    def get_absolute_url(self):
+        return reverse("patient:panel", kwargs={"id": self.id})
+    
+
     def __str__(self):
         return self.first_name + " " + self.last_name
+        
     
 
 
