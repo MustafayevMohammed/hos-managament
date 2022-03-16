@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from disease.models import DiseaseModel, OperationModel
-from patients.forms import CreatePatientForm
+from patients.forms import AddPatientStatusForm, CreatePatientForm
 from patients.models import PatientModel, PeopleWithPatientModel, BloodTypeModel, GenderModel
 from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -96,9 +96,11 @@ class PatientCreateView(CreateView):
         # return render(request, "create_patient.html", {'form': form})   
 
 
-class PatientUpdateView(UpdateView):
+class PatinetEditView(UpdateView):
     template_name = "patient_edit.html"
     form_class = CreatePatientForm
+    # permission_required = "patientmodel.change_patientmodel"
+    
 
     def get_object(self):
         # id = self.kwargs.get("id")
@@ -107,7 +109,7 @@ class PatientUpdateView(UpdateView):
 
 
     def get_context_data(self,*args, **kwargs):
-        context = super(PatientUpdateView, self).get_context_data(*args,**kwargs)
+        context = super(PatinetEditView, self).get_context_data(*args,**kwargs)
         context["gender_choices"] = GenderModel.objects.all()
         context["blood_type_choices"] = BloodTypeModel.objects.all()
         context["diseases"] = DiseaseModel.objects.all()
@@ -116,7 +118,13 @@ class PatientUpdateView(UpdateView):
         context["patient_diseases"] = patient.disease.all
         
         return context
+    
 
+    def dispatch(self,request,*args, **kwargs):
+        if request.user.is_staff == False:
+            return redirect("/")
+        return super().dispatch(request,*args, **kwargs)
+    
 
     # def form_valid(self, form, *args, **kwargs):
     #     print(self.get_object)
@@ -150,10 +158,9 @@ class PatientUpdateView(UpdateView):
 
     
 
-
-
-def add_patient_status(request,id):
-    return render(request,"add_patient_status.html")
+class AddPatientStatusView(CreateView):
+    template_name = "add_patient_status.html"
+    form_class = AddPatientStatusForm
 
 def ppl_with_patient(request,id):
     return render(request,"add_ppl_with_patient.html")
