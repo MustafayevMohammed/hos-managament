@@ -14,7 +14,14 @@
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"/>
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    
+
   </head>
   <body>
     <div class="container-scroller">
@@ -533,7 +540,13 @@
                           <label class="col-sm-6 col-form-label">First Name</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" />
+                              {% if form.first_name.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.first_name.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input type="text" class="form-control" name="first_name" value="{{patient.first_name}}" />
                             </div>
                           </div>
                         </div>
@@ -541,15 +554,27 @@
                           <label class="col-sm-6 col-form-label">Last Name</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" />
+                              {% if form.last_name.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.last_name.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input type="text" class="form-control" name="last_name" value="{{patient.last_name}}" />
                             </div>
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <label class="col-sm-6 col-form-label">Phone Number</label>
+                          <label class="col-sm-6 col-form-label">Telefon Nomreniz</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input type="text" class="form-control" />
+                              {% if form.phonenumber.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.phonenumber.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input type="tel" id="phone" class="form-control" name="phonenumber" value="{{patient.phonenumber}}" />
                             </div>
                           </div>
                         </div>
@@ -565,14 +590,19 @@
                           </div>
                         </div> {% endcomment %}
                         <div class="col-md-6">
-                          <label class="col-sm-6 col-form-label">Gender</label>
+                          <label class="col-sm-9 col-form-label">Gender</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <select class="form-control" >
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              {% if form.gender.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.gender.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <select class="form-control" name="gender">
+                                {% for gender in gender_choices %}
+                                  <option selected="{{patient.gender}}" value="{{gender.id}}">{{gender.name}}</option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -582,32 +612,57 @@
 
 
                         <div class="col-md-6">
-                          <label class="col-sm-6 col-form-label">Discharged Date</label>
-                          <div class="form-group row">
-                            <div class="col-sm-9">
-                              <input class="form-control" placeholder="dd/mm/yyyy" />
+                          <div class="col-md-12 d-date">
+                            <label class="col-sm-12 col-form-label">Cixis Tarixi</label>
+                            <div class="form-group row">
+                              <div class="col-sm-12">
+                                {% if form.discharged_date.errors %}
+                                  <div class="error alert alert-danger">
+                                    {{form.discharged_date.errors}}
+                                  </div>
+                                {% else %}
+                                {% endif %}
+
+                                {% if patient.discharged_date %}
+                                  <input class="form-control" type="datetime-local" placeholder="dd/mm/yyyy" name="discharged_date" id="datetimepicker" value="{{patient.discharged_date}}" />
+                                {% else %}
+                                  <input class="form-control" type="datetime-local" placeholder="dd/mm/yyyy" name="discharged_date" id="datetimepicker" />
+                                {% endif %}
+                              </div>
                             </div>
                           </div>
                         </div>
                         <div class="col-md-6">
-                          <label class="col-sm-6 col-form-label">Born Date</label>
+                          <label class="col-sm-6 col-form-label">Dogum Tarixi</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <input class="form-control" placeholder="dd/mm/yyyy" />
+                              {% if form.born_date.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.born_date.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input class="form-control" type="datetime-local" placeholder="dd/mm/yyyy" name="born_date" id="datepicker" value="{{patient.born_date}}" />
                             </div>
                           </div>
                         </div>
                       </div>
                       <div class="row">
+
                         <div class="col-md-6">
                           <label class="col-sm-6 col-form-label">Blood Type</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <select class="form-control">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              {% if form.blood_type.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.blood_type.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <select class="form-control" name="blood_type">
+                                {% for blood_type in blood_type_choices %}
+                                  <option selected="{{patient.blood_type}}" value="{{blood_type.id}}">{{blood_type}}</option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -631,15 +686,59 @@
                         </div> {% endcomment %}
 
                         <div class="col-md-6">
-                          <label class="col-sm-6 col-form-label">Disease(s)</label>
+                          <div class="col-md-12">
+                            <label class="col-sm-12 col-form-label">Disease(s)</label>
+                            <div class="form-group row">
+                              <div class="col-sm-12">
+                                {% if form.disease.errors %}
+                                  <div class="error alert alert-danger">
+                                    {{form.disease.errors}}
+                                  </div>
+                                {% else %}
+                                {% endif %}
+
+                                <select class="form-control multiple-select" name="disease" multiple="multiple">
+                                  {% for disease in diseases %}
+                                    <option value="{{disease.id}}"> {{disease.name}} </option>
+                                  {% endfor %}
+
+                                  {% for pat_disease in patient_diseases %}
+                                    <option value="{{pat_disease.id}}" selected>{{pat_disease}}</option>  
+                                  {% endfor %}
+                                </select>
+
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label class="col-sm-6 col-form-label">Giris Tarixi</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <select class="form-control multiple-select" name="disease[]" multiple="multiple">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
-                              </select>
+                              {% if form.joining_date.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.joining_date.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input class="form-control"  type="datetime-local"  placeholder="dd/mm/yyyy" name="joining_date" id="datepicker" value="{{patient.joining_date}}" />
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <label class="col-sm-6 col-form-label">Gozlenilen Cixis Tarixi</label>
+                          <div class="form-group row">
+                            <div class="col-sm-9">
+                              {% if form.expected_discharging_date.errors %}
+                                <div class="error alert alert-danger">
+                                  {{form.expected_discharging_date.errors}}
+                                </div>
+                              {% else %}
+                              {% endif %}
+                              <input class="form-control"  type="datetime-local"  placeholder="dd/mm/yyyy" name="expected_discharging_date" id="datepicker" value="{{patient.expected_discharging_date}}" />
                             </div>
                           </div>
                         </div>
@@ -705,12 +804,19 @@
                         </div> {% endcomment %}
                         <div class="col-md-12">
                           <div class="form-group">
-                            <label for="exampleTextarea1">Additional Information</label>
+                            <label for="exampleTextarea1">Patient Haqqinda Elave Melumat</label>
+                            {% if form.additional_information.errors %}
+                              <div class="error alert alert-danger">
+                                {{form.additional_information.errors}}
+                              </div>
+                            {% else %}
+                            {% endif %}
                             <textarea
                               class="form-control"
                               id="exampleTextarea1"
                               rows="7"
-                            ></textarea>
+                              name="additional_information"
+                            > {{patient.additional_information}} </textarea>
                           </div>
                         </div>
                       </div>
@@ -1214,6 +1320,50 @@
         var $searchfield = $(this).parent().find('.select2-search__field');
         $searchfield.prop('disabled', true);
       });
+      //number country
+      const phoneInputField = document.querySelector("#phone");
+      const phoneInput = window.intlTelInput(phoneInputField, {
+        preferredCountries: ["az", "co", "in", "de"],
+        utilsScript:
+          "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+      });
+      $("form").submit(function() {
+        var full_number = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
+      $("input[name='phonenumber'").val(full_number);
+        alert(full_number)
+      });
+
+      
+      
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
+    <script>
+      config = {
+        // enableTime: true,
+        // dateFormat: "Y-m-d H:i",
+        // altInput: true,
+        // altFormat: "F j, Y (h:s K)"
+        enableTime: false,
+        dateFormat: "Y-m-d",
+        altFormat: "F j, Y",
+
+      }
+      config2 = {
+        // enableTime: true,
+        // dateFormat: "Y-m-d H:i",
+        // altInput: true,
+        // altFormat: "F j, Y (h:s K)"
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        altFormat: "F j, Y",
+        time_24hr: true 
+        
+      }
+
+      flatpickr("#datepicker", config);
+      flatpickr("#datetimepicker",config2)
     </script>
 
   </body>
