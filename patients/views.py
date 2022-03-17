@@ -9,6 +9,7 @@ from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView
 import phonenumbers
+from django.db.models import Q
 # Create your views here.
 
 class PatientListView(LoginRequiredMixin,View):
@@ -20,7 +21,6 @@ class PatientListView(LoginRequiredMixin,View):
         deactive_patients = PatientModel.objects.filter(is_active = False)
 
         if request.user.is_staff == False:
-            # if request.user
             return redirect("doctor:panel",request.user.id)
 
         context = {
@@ -96,26 +96,24 @@ class PatientCreateView(CreateView):
         # return render(request, "create_patient.html", {'form': form})   
 
 
-class PatinetEditView(UpdateView):
+class PatientEditView(UpdateView):
     template_name = "patient_edit.html"
     form_class = CreatePatientForm
     # permission_required = "patientmodel.change_patientmodel"
     
 
     def get_object(self):
-        # id = self.kwargs.get("id")
-        # print(patient)
         return PatientModel.objects.get(id = self.kwargs.get("id"))
 
 
     def get_context_data(self,*args, **kwargs):
-        context = super(PatinetEditView, self).get_context_data(*args,**kwargs)
+        context = super(PatientEditView, self).get_context_data(*args,**kwargs)
         context["gender_choices"] = GenderModel.objects.all()
         context["blood_type_choices"] = BloodTypeModel.objects.all()
-        context["diseases"] = DiseaseModel.objects.all()
         context["patient"] = self.get_object
         patient = PatientModel.objects.get(id = self.kwargs.get("id"))
         context["patient_diseases"] = patient.disease.all
+        context["diseases"] = DiseaseModel.objects.exclude(id__in = patient.disease.values_list('id', flat=True))
         
         return context
     
@@ -194,8 +192,23 @@ class AddPatientStatusView(CreateView):
     
 
 
-def ppl_with_patient(request,id):
-    return render(request,"add_ppl_with_patient.html")
+class AddPplWithPatientView(View):
+    
+    def get(self,request,*args, **kwargs):
+        doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = kwargs.get("id"))
+        patient = PatientModel.objects.get(id = kwargs.get("id"))
+        for d in doctors_with_patient:
+            print(d.doctor)
+            doctors = DoctorModel.objects.all().exclude(first_name = d.doctor.first_name)
+
+
+        context = {
+            "doctors":doctors,
+            "doctors_with_patient":doctors_with_patient,
+            "patient":patient,
+        }
+        return render(request,"add_ppl_with_patient.html",context)
+
 
 
 def patient_logs(request):
