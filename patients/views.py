@@ -4,7 +4,7 @@ from django.urls import reverse_lazy, reverse
 from django.views import View
 from disease.models import DiseaseModel, OperationModel
 from patients.forms import AddPatientStatusForm, CreatePatientForm
-from patients.models import PatientModel, PeopleWithPatientModel, BloodTypeModel, GenderModel
+from patients.models import PatientModel, PatientStatusModel, PeopleWithPatientModel, BloodTypeModel, GenderModel, StatusChoicesModel
 from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView
@@ -161,6 +161,38 @@ class PatinetEditView(UpdateView):
 class AddPatientStatusView(CreateView):
     template_name = "add_patient_status.html"
     form_class = AddPatientStatusForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient_status"] = StatusChoicesModel.objects.all()
+        return context
+
+
+    def form_valid(self,form):
+        status = form.cleaned_data.get("status")
+        note = form.cleaned_data.get("note")
+
+        doctor = DoctorModel.objects.get(user = self.request.user)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+
+        PatientStatusModel.objects.create(status = status, note = note, doctor = doctor, patient = patient)
+        
+        return redirect("patient:panel",patient.id)
+    
+
+    def form_invalid(self,form,*args, **kwargs):
+        return super().form_invalid(form)
+    
+
+    def dispatch(self, request, *args, **kwargs):
+        patient = PatientModel.objects.get(id = kwargs.get("id"))
+        doctor = DoctorModel.objects.filter(user = request.user).first()
+        doctor_ppl_with_patient = PeopleWithPatientModel.objects.filter(patient = patient, doctor = doctor).first()
+        if doctor_ppl_with_patient is None:
+            return redirect("/")
+        return super().dispatch(request, *args, **kwargs)
+    
+
 
 def ppl_with_patient(request,id):
     return render(request,"add_ppl_with_patient.html")
