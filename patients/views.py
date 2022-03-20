@@ -20,8 +20,8 @@ class PatientListView(LoginRequiredMixin,View):
         active_patients = PatientModel.objects.filter(is_active = True)
         deactive_patients = PatientModel.objects.filter(is_active = False)
 
-        if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+        # if request.user.is_staff == False:
+        #     return redirect("doctor:panel",request.user.id)
 
         context = {
             "patients":patients,

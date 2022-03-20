@@ -19,15 +19,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#qz6j#e*wobo^2-7oe3o^eo1k^$fivjn4wc=4ct2u*pk%+pmil'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY', 'sh5(-b_v22==a5*ddy($(6&-@rdbjinx&3%^alq#-#ut6v+r1#')
 
-ALLOWED_HOSTS = []
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = False if os.environ.get('DEBUG') else True
+PROD = not DEBUG
+ALLOWED_HOSTS = ['*']
 
-
+print(DEBUG, 'salam')
 # Application definition
 
 INSTALLED_APPS = [
@@ -81,13 +82,49 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
+
+if PROD:
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PORT': os.environ.get('POSTGRES_PORT'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            'NAME': 'host-managment-db',
+            'USER': 'host-managment-user',
+            'PORT': 5436,
+            'PASSWORD': 'host@managment',
+            'HOST': 'localhost',
+        }
+    }
+    
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql_psycopg2",
+#         "NAME": os.environ.get("POSTGRES_DB", "name_bringly_db"),
+#         "USER": os.environ.get("POSTGRES_USER", "user_bringly_db"),
+#         "PASSWORD": os.environ.get(
+#             "POSTGRES_PASSWORD", "6NwpPtvGyCsMLAKDZtazEP9WjANze25eP3e2UJdWrgrrKq"
+#         ),
+#         "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
+#         "PORT": os.environ.get("POSTGRES_PORT", "5435"),
+    
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
