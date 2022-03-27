@@ -550,34 +550,37 @@
                           </tr>
                         </thead>
                         <tbody>
-                          {% for doctor in ppl_with_patient %}
-                            <tr>
-                              <td>
-                                {{doctor.doctor.first_name}}
-                              </td>
-                              <td>
-                                {{doctor.doctor.last_name}}
-                              </td>
-                              <td>
-                                {{doctor.doctor.working_field}}
-                              </td>
-                              <td>
-                                {{doctor.doctor.phonenumber}}
-                              </td>
-                              <td>
-                                {{doctor.doctor.blood_type}}
-                              </td>
-                              <td>
-                                {% if doctor.doctor.is_active == True %}
-                                  <div class="badge badge-inverse-success"> Yes </div>
-                                {% else %}
-                                  <div class="badge badge-inverse-danger"> No </div>
-                                {% endif %}
-                              </td>
-                              <td>
-                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.doctor.user.id %}">Detal</a>
-                              </td>
-                            </tr>
+                          {% for doctors in ppl_with_patient %}
+                            {% for doctor in doctors.doctor.all %}
+                              <tr>
+                                <td>
+                                  {{doctor.first_name}}
+                                </td>
+                                <td>
+                                  {{doctor.last_name}}
+                                </td>
+                                <td>
+                                  {{doctor.working_field}}
+                                </td>
+                                <td>
+                                  {{doctor.phonenumber}}
+                                </td>
+                                <td>
+                                  {{doctor.blood_type}}
+                                </td>
+                                <td>
+                                  {% if doctor.is_active == True %}
+                                    <div class="badge badge-inverse-success"> Yes </div>
+                                  {% else %}
+                                    <div class="badge badge-inverse-danger"> No </div>
+                                  {% endif %}
+                                </td>
+                                <td>
+
+                                  <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
+                                </td>
+                              </tr>
+                            {% endfor %}
                           {% endfor %}
                         </tbody>
                       </table>
