@@ -51,7 +51,7 @@
                       <h6 class="dropdown-header">Patient Emeliyyatlari</h6>
                       <a class="dropdown-item" href="{% url 'patient:edit' patient.id %}">Patient'in Ayarlari</a>
                       {% comment %} <a class="dropdown-item" href="#">Patient'in yanindaki insanlar</a> {% endcomment %}
-                      <a class="dropdown-item" href="#">Patient'e Hekim Secmek</a>
+                      <a href="{% url 'patient:add_ppl_with_patient' patient.id %}" class="dropdown-item" href="#">Patient'e Hekim Secmek</a>
                       <div class="dropdown-divider"></div>
                       <a class="dropdown-item" href="#">Patient'i Deaktiv Etmek</a>
                     </div>
@@ -582,7 +582,10 @@
                         </tbody>
                       </table>
                       <hr>
-                      <a class="btn btn-info btn-block" style="color: white;"> Patient'in Yanindaki Hekimler'i Deyismek </a>
+                      {% if user.is_staff == True %}
+                        <a class="btn btn-info btn-block" style="color: white;" href="{% url 'patient:add_ppl_with_patient' patient.id %}"> Patient'in Yanindaki Hekimleri Deyismek </a>
+                      {% else %}
+                      {% endif %}
 
                     </div>
                   </div>

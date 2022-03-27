@@ -3,12 +3,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from disease.models import DiseaseModel, OperationModel
-from patients.forms import AddPatientStatusForm, CreatePatientForm
-from patients.models import PatientModel, PeopleWithPatientModel, BloodTypeModel, GenderModel
+from patients.forms import AddPatientStatusForm, AddPeopleWithPatientForm, CreatePatientForm
+from patients.models import PatientModel, PatientStatusModel, PeopleWithPatientModel, BloodTypeModel, GenderModel, StatusChoicesModel
 from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, FormView
 import phonenumbers
+from django.db.models import Q
 # Create your views here.
 
 class PatientListView(LoginRequiredMixin,View):
@@ -20,7 +21,6 @@ class PatientListView(LoginRequiredMixin,View):
         deactive_patients = PatientModel.objects.filter(is_active = False)
 
         if request.user.is_staff == False:
-            # if request.user
             return redirect("doctor:panel",request.user.id)
 
         context = {
@@ -96,26 +96,24 @@ class PatientCreateView(CreateView):
         # return render(request, "create_patient.html", {'form': form})   
 
 
-class PatinetEditView(UpdateView):
+class PatientEditView(UpdateView):
     template_name = "patient_edit.html"
     form_class = CreatePatientForm
     # permission_required = "patientmodel.change_patientmodel"
     
 
     def get_object(self):
-        # id = self.kwargs.get("id")
-        # print(patient)
         return PatientModel.objects.get(id = self.kwargs.get("id"))
 
 
     def get_context_data(self,*args, **kwargs):
-        context = super(PatinetEditView, self).get_context_data(*args,**kwargs)
+        context = super(PatientEditView, self).get_context_data(*args,**kwargs)
         context["gender_choices"] = GenderModel.objects.all()
         context["blood_type_choices"] = BloodTypeModel.objects.all()
-        context["diseases"] = DiseaseModel.objects.all()
         context["patient"] = self.get_object
         patient = PatientModel.objects.get(id = self.kwargs.get("id"))
         context["patient_diseases"] = patient.disease.all
+        context["diseases"] = DiseaseModel.objects.exclude(id__in = patient.disease.values_list('id', flat=True))
         
         return context
     
@@ -162,8 +160,91 @@ class AddPatientStatusView(CreateView):
     template_name = "add_patient_status.html"
     form_class = AddPatientStatusForm
 
-def ppl_with_patient(request,id):
-    return render(request,"add_ppl_with_patient.html")
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["patient_status"] = StatusChoicesModel.objects.all()
+        return context
+
+
+    def form_valid(self,form):
+        status = form.cleaned_data.get("status")
+        note = form.cleaned_data.get("note")
+
+        doctor = DoctorModel.objects.get(user = self.request.user)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+
+        PatientStatusModel.objects.create(status = status, note = note, doctor = doctor, patient = patient)
+        
+        return redirect("patient:panel",patient.id)
+    
+
+    def form_invalid(self,form,*args, **kwargs):
+        return super().form_invalid(form)
+    
+
+    def dispatch(self, request, *args, **kwargs):
+        patient = PatientModel.objects.get(id = kwargs.get("id"))
+        doctor = DoctorModel.objects.filter(user = request.user).first()
+        doctor_ppl_with_patient = PeopleWithPatientModel.objects.filter(patient = patient, doctor = doctor).first()
+        if doctor_ppl_with_patient is None:
+            return redirect("/")
+        return super().dispatch(request, *args, **kwargs)
+    
+
+
+# class AddPplWithPatientView(View):
+    
+#     def get(self,request,*args, **kwargs):
+#         patient = PatientModel.objects.get(id = kwargs.get("id"))
+#         print(patient)
+#         doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = patient,is_active = True)
+#         doctors = DoctorModel.objects.filter(~Q(doctor_ppl_with_patient__in = doctors_with_patient))
+
+#         context = {
+#             "doctors":doctors,
+#             "doctors_with_patient":doctors_with_patient,
+#             "patient":patient,
+#         }
+#         return render(request,"add_ppl_with_patient.html",context)
+    
+#     def post(self,request,*args, **kwargs):
+#         form = AddPeopleWithPatientForm(request.POST)
+#         if form.is_valid():
+#             doctors = form.cleaned_data.get("doctor")
+#             patient_doctors = DoctorModel.objects.filter(id=doctors.id)
+#             print(patient_doctors)
+#             print(self.get(request).context.get("doctors"))
+#             print(self.get(self,request).patient)
+
+#             for doctor in patient_doctors:
+#                 instance = PeopleWithPatientModel.objects.create(doctor=doctor, patient = super(AddPplWithPatientView,self).get,is_active = True)
+#                 instance.save()
+#             return redirect("/")
+
+
+class AddPplWithPatientView(FormView):
+    template_name = "add_ppl_with_patient.html"
+    form_class = AddPeopleWithPatientForm
+    # success_url = "/"
+
+    def get_context_data(self,*args, **kwargs):
+        context = super(AddPplWithPatientView,self).get_context_data(*args, **kwargs)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+        doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = patient,is_active = True)
+        context["patient"] = patient
+        context["doctors"] = DoctorModel.objects.filter(~Q(doctor_ppl_with_patient__in = doctors_with_patient))
+        return context
+
+    def form_valid(self,form,*args, **kwargs):
+        doctors = form.cleaned_data.get("doctor")
+        patient_doctors = DoctorModel.objects.filter(id__in=doctors)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+        for doctor in patient_doctors:
+            instance = PeopleWithPatientModel.objects.create(patient = patient,is_active = True)
+            instance.doctor.add(doctor)
+            instance.save()
+        return redirect("/")
+
 
 
 def patient_logs(request):

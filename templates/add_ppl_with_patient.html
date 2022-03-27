@@ -27,7 +27,7 @@
         <div class="main-panel">
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
-              <h3 class="mb-0"> Doctor's With Patient Edit <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">Patientin Yanindaki Hekimler'i Editlemek Formu</span>
+              <h3 class="mb-0"> Add Doctor's With Patient <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">{{patient.get_full_name}} Yanina Hekimler'i Elave Etmek Formu</span>
               </h3>
               {% comment %} <div class="d-flex">
                 <button type="button" class="btn btn-sm bg-white btn-icon-text border">
@@ -553,11 +553,10 @@
                           <label class="col-sm-6 col-form-label">Doctor(s)</label>
                           <div class="form-group row">
                             <div class="col-sm-12 h-100 d-inline-block">
-                              <select class="form-control multiple-select" name="doctor[]" multiple="multiple">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              <select class="form-control multiple-select" name="doctor" multiple>
+                                {% for doctor in doctors %}
+                                  <option value="{{ doctor.id }}"> {{doctor.get_full_name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>

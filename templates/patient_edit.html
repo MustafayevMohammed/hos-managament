@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    {% comment %} <link rel="stylesheet" href="{% static 'css/select2.css' %}"> {% endcomment %}
     
 
   </head>
@@ -697,7 +698,7 @@
                                 {% else %}
                                 {% endif %}
 
-                                <select class="form-control multiple-select" name="disease" multiple="multiple">
+                                <select class="form-control multiple-select" id="selectler" name="disease" multiple="multiple">
                                   {% for disease in diseases %}
                                     <option value="{{disease.id}}"> {{disease.name}} </option>
                                   {% endfor %}

@@ -45,20 +45,16 @@ class PatientModel(models.Model):
         
     
 
+class StatusChoicesModel(models.Model):
+    name = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.name
+    
 
 class PatientStatusModel(models.Model):
-    
-    STATUS_CHOICES = [
-        ("Yaxsi","Yaxsi"),
-        ("Stabil","Stabil"),
-        ("Agir","Agir"),
-        ("Emeliyyata_Hazirlasir","Emeliyyata Hazirlasir"),
-        ("Emeliyyatdadir","Emeliyyatdadir"),
-    ]
-    
-
     patient = models.ForeignKey(PatientModel, on_delete = models.CASCADE,null=True,blank=False,default=1,related_name="patient_status")
-    status = models.CharField(choices=STATUS_CHOICES,max_length=22)
+    status = models.ForeignKey(StatusChoicesModel,max_length=22,on_delete=models.CASCADE)
     note = models.TextField(verbose_name="Xestenin cari veziyyeti haqqinda melumat:")
     date = models.DateTimeField(auto_now_add=True,verbose_name="Gun Ve Vaxt:")
     doctor = models.ForeignKey("doctors.DoctorModel",null=True,blank=False,on_delete=models.SET_NULL)
@@ -68,5 +64,5 @@ class PatientStatusModel(models.Model):
 
 class PeopleWithPatientModel(models.Model):
     patient = models.ForeignKey("patients.PatientModel",on_delete=models.CASCADE,related_name="patient_ppl_with_patient")
-    doctor = models.ForeignKey("doctors.DoctorModel",related_name="doctor_ppl_with_patient", on_delete=models.CASCADE)
+    doctor = models.ManyToManyField("doctors.DoctorModel",related_name="doctor_ppl_with_patient",null=True,blank=True)
     is_active = models.BooleanField(default=True)
