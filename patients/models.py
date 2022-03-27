@@ -64,5 +64,5 @@ class PatientStatusModel(models.Model):
 
 class PeopleWithPatientModel(models.Model):
     patient = models.ForeignKey("patients.PatientModel",on_delete=models.CASCADE,related_name="patient_ppl_with_patient")
-    doctor = models.ManyToManyField("doctors.DoctorModel",related_name="doctor_ppl_with_patient",null=True,blank=True)
+    doctor = models.ManyToManyField("doctors.DoctorModel",related_name="doctor_ppl_with_patient")
     is_active = models.BooleanField(default=True)
