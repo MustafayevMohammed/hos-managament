@@ -3,11 +3,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
 from django.views import View
 from disease.models import DiseaseModel, OperationModel
-from patients.forms import AddPatientStatusForm, CreatePatientForm
+from patients.forms import AddPatientStatusForm, AddPeopleWithPatientForm, CreatePatientForm
 from patients.models import PatientModel, PatientStatusModel, PeopleWithPatientModel, BloodTypeModel, GenderModel, StatusChoicesModel
 from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, FormView
 import phonenumbers
 from django.db.models import Q
 # Create your views here.
@@ -192,22 +192,60 @@ class AddPatientStatusView(CreateView):
     
 
 
-class AddPplWithPatientView(View):
+# class AddPplWithPatientView(View):
     
-    def get(self,request,*args, **kwargs):
-        doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = kwargs.get("id"))
-        patient = PatientModel.objects.get(id = kwargs.get("id"))
-        for d in doctors_with_patient:
-            print(d.doctor)
-            doctors = DoctorModel.objects.all().exclude(first_name = d.doctor.first_name)
+#     def get(self,request,*args, **kwargs):
+#         patient = PatientModel.objects.get(id = kwargs.get("id"))
+#         print(patient)
+#         doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = patient,is_active = True)
+#         doctors = DoctorModel.objects.filter(~Q(doctor_ppl_with_patient__in = doctors_with_patient))
+
+#         context = {
+#             "doctors":doctors,
+#             "doctors_with_patient":doctors_with_patient,
+#             "patient":patient,
+#         }
+#         return render(request,"add_ppl_with_patient.html",context)
+    
+#     def post(self,request,*args, **kwargs):
+#         form = AddPeopleWithPatientForm(request.POST)
+#         if form.is_valid():
+#             doctors = form.cleaned_data.get("doctor")
+#             patient_doctors = DoctorModel.objects.filter(id=doctors.id)
+#             print(patient_doctors)
+#             print(self.get(request).context.get("doctors"))
+#             print(self.get(self,request).patient)
+
+#             for doctor in patient_doctors:
+#                 instance = PeopleWithPatientModel.objects.create(doctor=doctor, patient = super(AddPplWithPatientView,self).get,is_active = True)
+#                 instance.save()
+#             return redirect("/")
 
 
-        context = {
-            "doctors":doctors,
-            "doctors_with_patient":doctors_with_patient,
-            "patient":patient,
-        }
-        return render(request,"add_ppl_with_patient.html",context)
+class AddPplWithPatientView(FormView):
+    template_name = "add_ppl_with_patient.html"
+    form_class = AddPeopleWithPatientForm
+    # success_url = "/"
+
+    def get_context_data(self,*args, **kwargs):
+        context = super(AddPplWithPatientView,self).get_context_data(*args, **kwargs)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+        doctors_with_patient = PeopleWithPatientModel.objects.filter(patient = patient,is_active = True)
+        context["patient"] = patient
+        context["doctors"] = DoctorModel.objects.filter(~Q(doctor_ppl_with_patient__in = doctors_with_patient))
+        return context
+
+    def form_valid(self,form,*args, **kwargs):
+        doctors = form.cleaned_data.get("doctor")
+        patient_doctors = DoctorModel.objects.filter(id__in=doctors.id)
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+        for doctor in patient_doctors:
+            print("salam")
+
+            # instance = PeopleWithPatientModel.objects.create(doctor = doctor,patient = patient,is_active = True)
+            # doctor.doctor_ppl_with_patient.add(instance)
+            # instance.save()
+        return redirect("/")
 
 
 
