@@ -237,14 +237,12 @@ class AddPplWithPatientView(FormView):
 
     def form_valid(self,form,*args, **kwargs):
         doctors = form.cleaned_data.get("doctor")
-        patient_doctors = DoctorModel.objects.filter(id__in=doctors.id)
+        patient_doctors = DoctorModel.objects.filter(id__in=doctors)
         patient = PatientModel.objects.get(id = self.kwargs.get("id"))
         for doctor in patient_doctors:
-            print("salam")
-
-            # instance = PeopleWithPatientModel.objects.create(doctor = doctor,patient = patient,is_active = True)
-            # doctor.doctor_ppl_with_patient.add(instance)
-            # instance.save()
+            instance = PeopleWithPatientModel.objects.create(patient = patient,is_active = True)
+            instance.doctor.add(doctor)
+            instance.save()
         return redirect("/")
 
 
