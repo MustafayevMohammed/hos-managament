@@ -1,3 +1,6 @@
+from ast import ExtSlice
+from enum import Flag
+from urllib import request
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy, reverse
@@ -9,6 +12,7 @@ from doctors.models import DoctorModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView, UpdateView, FormView
 import phonenumbers
+from django.contrib import messages
 from django.db.models import Q
 # Create your views here.
 
@@ -225,7 +229,6 @@ class AddPatientStatusView(CreateView):
 class AddPplWithPatientView(FormView):
     template_name = "add_ppl_with_patient.html"
     form_class = AddPeopleWithPatientForm
-    # success_url = "/"
 
     def get_context_data(self,*args, **kwargs):
         context = super(AddPplWithPatientView,self).get_context_data(*args, **kwargs)
@@ -236,14 +239,23 @@ class AddPplWithPatientView(FormView):
         return context
 
     def form_valid(self,form,*args, **kwargs):
+        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
         doctors = form.cleaned_data.get("doctor")
         patient_doctors = DoctorModel.objects.filter(id__in=doctors)
-        patient = PatientModel.objects.get(id = self.kwargs.get("id"))
+        ppl_with_patient = PeopleWithPatientModel.objects.filter(patient=patient,doctor__in=patient_doctors,is_active=False)
+
         for doctor in patient_doctors:
+            if PeopleWithPatientModel.objects.filter(patient=patient,doctor__in=patient_doctors).exists():
+                if ppl_with_patient.exists():
+                    ppl_with_patient.update(is_active=True)
+                    return redirect("patient:panel",patient.id)
+                messages.error(self.request,"Xeta Bas Verdi.")
+                return redirect("patient:add_ppl_with_patient",patient.id)
+
             instance = PeopleWithPatientModel.objects.create(patient = patient,is_active = True)
             instance.doctor.add(doctor)
             instance.save()
-        return redirect("patient:panel",instance.patient.id)
+        return redirect("patient:panel",instance.patient.id,)
 
 
 
