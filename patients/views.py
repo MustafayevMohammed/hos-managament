@@ -36,7 +36,7 @@ class PatientPanelView(LoginRequiredMixin,View):
 
     def get(self,request,id):
         patient = PatientModel.objects.get(id=id)
-        ppl_with_patient = PeopleWithPatientModel.objects.filter(patient = patient)
+        ppl_with_patient = PeopleWithPatientModel.objects.filter(patient = patient,is_active = True)
         operations = OperationModel.objects.filter(patient = patient)
         doctor = DoctorModel.objects.filter(doctor_ppl_with_patient__in =  ppl_with_patient, user = request.user).first()
 
@@ -243,7 +243,31 @@ class AddPplWithPatientView(FormView):
             instance = PeopleWithPatientModel.objects.create(patient = patient,is_active = True)
             instance.doctor.add(doctor)
             instance.save()
-        return redirect("/")
+        return redirect("patient:panel",instance.patient.id)
+
+
+
+class ListPplWithPatientView(View):
+
+    def get(self,request,*args, **kwargs):
+        patient = PatientModel.objects.get(id=self.kwargs.get("id"))
+        ppl_with_patient = PeopleWithPatientModel.objects.filter(patient=patient,is_active = True)
+        
+        context = {
+            "patient":patient,
+            "ppl_with_patient":ppl_with_patient,
+        }
+        return render(request,"list_ppl_with_patient.html",context)
+
+    def post(self,request,*args, **kwargs):
+        patient = PatientModel.objects.get(id=self.kwargs.get("id"))
+        doctors = self.request.POST.getlist("doctor")
+        instance = PeopleWithPatientModel.objects.filter(id__in = doctors)
+        for obj in instance:
+            obj.is_active = False
+            obj.save()
+        return redirect("patient:panel",patient.id)
+
 
 
 
