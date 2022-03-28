@@ -10,5 +10,6 @@ urlpatterns = [
     path("edit/<str:id>",views.PatientEditView.as_view(), name = "edit"),
     path("add_status/<str:id>",views.AddPatientStatusView.as_view(),name = "add_status"),
     path("add_ppl_with_patient/<str:id>",views.AddPplWithPatientView.as_view(),name = "add_ppl_with_patient"),
+    path("list_ppl_with_patient/<str:id>",views.ListPplWithPatientView.as_view(),name = "list_ppl_with_patient"),
     path("logs/",views.patient_logs,name = "logs"),
 ]

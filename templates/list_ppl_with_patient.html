@@ -5,599 +5,81 @@
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Breeze Admin</title>
+    <title>Patientin Yanindaki Hekimleri Silmek</title>
     <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
-    <link rel="stylesheet" href="{% static 'css/doctor.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/flag-icon-css/css/flag-icon.min.css' %}" />
     <link rel="stylesheet" href="{% static 'vendors/css/vendor.bundle.base.css' %}" />
     <link rel="stylesheet" href="{% static 'vendors/font-awesome/css/font-awesome.min.css' %}" />
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
+    <link rel="stylesheet" href="{% static 'css/operations.css' %}">
   </head>
   <body>
     <div class="container-scroller">
       {% include "includes/_sidebar.html" %}
-
+      
       <div class="container-fluid page-body-wrapper">
         {% include "includes/_settings-panel.html" %}
 
         {% include "includes/_navbar.html" %}
-
         <div class="main-panel">
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
-              <h3 class="mb-0"> Patient Panel <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">Your web analytics dashboard template.</span>
+              <h3 class="mb-0"> 
+                Patientin Yanindaki Hekimleri Silmek
               </h3>
               <div class="d-flex">
-                {% comment %} <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button> {% endcomment %}
+                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
+                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
                 <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <a href="#"><i class="mdi mdi-book btn-icon-prepend"></i> Loglar </a>
-                </button>
-                {% if user.user_doctors %}
-                  <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                    <a href="{% url 'patient:add_status' patient.id %}"><i class="mdi mdi-book-plus btn-icon-prepend"></i>Status Elave Etmek</a>
-                  </button>
-
-                {% else %}
-                  <div class="dropdown">
-                    <button type="button" class="btn btn-success dropdown-toggle" id="dropdownMenuIconButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                      <i class="mdi mdi-account"></i>
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton9" style="">
-                      <h6 class="dropdown-header">Patient Emeliyyatlari</h6>
-                      <a class="dropdown-item" href="{% url 'patient:edit' patient.id %}">Patient'in Ayarlari</a>
-                      {% comment %} <a class="dropdown-item" href="#">Patient'in yanindaki insanlar</a> {% endcomment %}
-                      <a href="{% url 'patient:add_ppl_with_patient' patient.id %}" class="dropdown-item" href="#">Patient'e Hekim Elave Etmek</a>
-                      <div class="dropdown-divider"></div>
-                      <a class="dropdown-item" href="#">Patient'i Deaktiv Etmek</a>
-                    </div>
-                  </div> 
-                {% endif %}
-
-
-             
-                </div>
-            </div>
-            <div class="d-flex row">
-              <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
-                <div class="row stats">
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-success">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Ad Soyad</p>
-                            <h2 class="text-white"> {{patient.get_full_name}} </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-circle bg-inverse-icon-success"></i>
-                        </div>
-                        <h6 class="text-white">Patientin Adi Ve Soyadi</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-warning">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0  color-card-head">Patient'in Yanindaki Insanlarin Sayisi</p>
-                            <h2 class="text-white"> {{ppl_with_patient.count}} </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-warning"></i>
-                        </div>
-                        <h6 class="text-white">Patientin Yaninda Olan Hekimlerin Sayi</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-danger">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Patient'in Kecirdiyi Emeliyyat Sayisi</p>
-                            <h2 class="text-white"> {{operations.count}} </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-human bg-inverse-icon-danger"></i>
-                        </div>
-                        <h6 class="text-white">Patientin Indiye Kimi Kecirdiyi Butun Emeliyyatlarin Sayi</h6>
-                      </div>
-                    </div>
-                  </div>
-                  {% comment %} <div class="col-xl-3 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-primary">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Doktor'a Aid Olan Xestelerin Sayi</p>
-                            <h2 class="text-white"> $1,753.<span class="h5">00</span>
-                            </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-primary"></i>
-                        </div>
-                        <h6 class="text-white">67.98% Since last month</h6>
-                      </div>
-                    </div>
-                  </div> {% endcomment %}
-
-                </div>
+                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
+                <button type="button" class="btn btn-sm ml-3 btn-success"> Add Operation </button>
               </div>
-              {% comment %} <div class="col-xl-9 stretch-card grid-margin">
-                <div class="card">
-                  <div class="card-body">
-                    <div class="row">
-                      <div class="col-sm-7">
-                        <h5>Business Survey</h5>
-                        <p class="text-muted"> Show overview jan 2018 - Dec 2019 <a class="text-muted font-weight-medium pl-2" href="#"><u>See Details</u></a>
-                        </p>
-                      </div>
-                      <div class="col-sm-5 text-md-right">
-                        <button type="button" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-primary font-weight-normal">
-                          <i class="mdi mdi-email btn-icon-prepend"></i>Download Report </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <div class="card mb-3 mb-sm-0">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Today Earnings</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$5,300</h3>
-                                <p class="text-success m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="earningChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="card mb-3 mb-sm-0">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Product Sold</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$9,100</h3>
-                                <p class="text-danger m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="productChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="card">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Today Orders</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$4,354</h3>
-                                <p class="text-success m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="orderChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row my-3">
-                      <div class="col-sm-12">
-                        <div class="flot-chart-wrapper">
-                          <div id="flotChart" class="flot-chart">
-                            <canvas class="flot-base"></canvas>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. <b>Learn More</b>
-                        </p>
-                      </div>
-                      <div class="col-sm-4">
-                        <p class="mb-0 text-muted">Sales Revenue</p>
-                        <h5 class="d-inline-block survey-value mb-0"> $2,45,500 </h5>
-                        <p class="d-inline-block text-danger mb-0"> last 8 months </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> {% endcomment %}
-
-              {% comment %} <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Son Xesteler</h4>
-                    <p class="card-description"> Add class <code>.table-striped</code>
-                    </p>
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>User</th>
-                            <th>First name</th>
-                            <th>Last Name</th>
-                            <th>Amount</th>
-                            <th>Deadline</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Herman Beck</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>Messsy Adam</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$245.30</td>
-                            <td>July 1, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>John Richards</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$138.00</td>
-                            <td>Apr 12, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-4.png" alt="image" />
-                            </td>
-                            <td>Peter Meggik</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Edward</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 160.25</td>
-                            <td>May 03, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>John Doe</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 123.21</td>
-                            <td>April 05, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>Henry Tom</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 150.00</td>
-                            <td>June 16, 2015</td>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
-                              <td>
-                                Mustafazade
-                              </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
-                              <td>
-                                  Mustafazade
-                              </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div> {% endcomment %}
             </div>
-            <div class="row">
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body px-0 p-3 overflow-auto">
-                    <h4 class="card-title pl-4">Etrafli Melumat</h4>
-                    <hr>
-                    <p class="card-text"> 
-                      {{patient.additional_information}}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-6 grid-margin stretch-card">
+
+            <div class="row" style="justify-content: center ;">
+              <div class="col-lg-9 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Patient Haqqinda Melumatlar</h4>
-                    {% comment %} <p class="card-description"> Add class <code>.table-hover</code> {% endcomment %}
-                    </p>
+                    <h4 class="card-title">"Patient"'in yanindaki hekimleri silmek</h4>
+
                     <div class="table-responsive">
-                      <table class="table table-striped">
-                        <tbody>
-                          <tr>
-                            <td class="font-weight-bold">First Name</td>
-                            <td> {{patient.first_name}} </td>
-                            {% comment %} <td class="text-danger"> 28.76% <i class="mdi mdi-arrow-down"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-danger">Pending</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Last Name</td>
-                            <td> {{patient.last_name}} </td>
-                            {% comment %} <td class="text-danger"> 21.06% <i class="mdi mdi-arrow-down"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-warning">In progress</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Phone Number</td>
-                            <td> {{patient.phonenumber}} </td>
-                            {% comment %} <td class="text-danger"> 35.00% <i class="mdi mdi-arrow-down"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-info">Fixed</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Expected D-Date</td>
-                            <td> {{patient.expected_discharging_date}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td>
-                            {% endcomment %}
-                          </tr> 
-                          <tr>
-                            <td class="font-weight-bold">Joining Date</td>
-                            <td> {{patient.joining_date}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td>
-                            {% endcomment %}
-                          </tr> 
-                          <tr>
-                            <td class="font-weight-bold">D-Date</td>
-                            <td> {{patient.discharged_date}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Born Date</td>
-                            <td> {{patient.born_date}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Blood Type</td>
-                            <td> {{patient.blood_type}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Disease(s)</td>
-                            <td>
-                              {% for disease in patient.disease.all %}
-                                {{disease.name}},
+                      <form action="" method="post">
+                        {% csrf_token %}
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>Secmek</th>
+                              <th>Ad-Soyad</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                              {% for objects in ppl_with_patient %}
+                                {% for doctor in objects.doctor.all %}
+                                <tr>
+                                  <td>
+                                  <input type="checkbox" value="{{ objects.id }}" name="doctor">
+                                  </td>
+                                  <td>
+                                    {{doctor.get_full_name}}
+                                  </td>
+                                </tr>
+                                {% endfor %}
                               {% endfor %}
-                            </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label>
-                            </td> {% endcomment %}
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Is Active?</td>
-                            <td> {{patient.is_active}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label> {% endcomment %}
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="font-weight-bold">Gender</td>
-                            <td> {{patient.gender}} </td>
-                            {% comment %} <td class="text-success"> 82.00% <i class="mdi mdi-arrow-up"></i>
-                            </td>
-                            <td>
-                              <label class="badge badge-success">Completed</label> {% endcomment %}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    {% comment %} <br> {% endcomment %}
-                    {% if user.user_doctors %}
-                    
-                    {% else %}
-                      <a href="{% url 'patient:edit' patient.id %}" class="btn btn-outline-success btn-block mt-2">Patient'i Editlemek</a>
-                      <hr>
-                      <a href="#" class="btn btn-outline-danger btn-block mt-2">Patient'i Deaktiv Etmek</a>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body px-0 overflow-auto">
-                    <h4 class="card-title pl-4">Son Emeliyyatlar</h4>
-                    <div class="table-responsive">
-                      <table class="table table-hover">
-                        <thead class="bg-light">
-                          <tr>
-                            <th>Name</th>
-                            <th>Disease</th>
-                            <th>Doctor(s)</th>
-                            <th>Starting Date</th>
-                            <th>Finished Date</th>
-                            <th>Is Active</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for operation in operations %}
-                            <tr>
-                              <td>
-                                  {{operation.name}}
-                              </td>
-                              <td>
-                                {% for disease in operation.disease.all %}
-                                  {{disease.name}}, 
-                                {% endfor %}
-                              </td>
-                              <td>
-                                {% for doctor in operation.doctor.all %}
-                                  {{doctor.get_full_name}}, 
-                                {% endfor %}
-                              </td>
-                              <td>
-                                {{operation.starting_date|date}}
-                              </td>
-                              <td>
-                                {{operation.finished_date|date}}
-                              </td>
-                              <td>
-                                {% if operation.is_active == True %}
-                                  <div class="badge badge-inverse-success"> Yes </div>
-                                {% else %}
-                                  <div class="badge badge-inverse-danger"> No </div>
-                                {% endif %}
-                              </td>
-                              <td>
-                                <a class="btn btn-success" href="{% url 'disease:panel' operation.id %}">Detal</a>
-                              </td>
-                            </tr>
-                          {% endfor %}
+                          </tbody>
+                        </form>
 
-                        </tbody>
-                      </table>
-                    </div>
-                    {% comment %} <a class="text-black mt-3 d-block pl-4" href="#">
-                      <span class="font-weight-medium h6">View all order history</span>
-                      <i class="mdi mdi-chevron-right"></i></a> {% endcomment %}
-                  </div>
-                </div>
-              </div>
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Patient'in Yanindaki Hekimler</h4>
-                    <div class="table-responsive">
-                      <table class="table table-hover">
-                        <thead>
-                          <tr>
-                            <th>First name</th>
-                            <th>Last Name</th>
-                            <th>Working Field</th>
-                            <th>Phone Number</th>
-                            <th>Blood Type</th>
-                            <th>Is Active</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {% for doctors in ppl_with_patient %}
-                            {% for doctor in doctors.doctor.all %}
-                              <tr>
-                                <td>
-                                  {{doctor.first_name}}
-                                </td>
-                                <td>
-                                  {{doctor.last_name}}
-                                </td>
-                                <td>
-                                  {{doctor.working_field}}
-                                </td>
-                                <td>
-                                  {{doctor.phonenumber}}
-                                </td>
-                                <td>
-                                  {{doctor.blood_type}}
-                                </td>
-                                <td>
-                                  {% if doctor.is_active == True %}
-                                    <div class="badge badge-inverse-success"> Yes </div>
-                                  {% else %}
-                                    <div class="badge badge-inverse-danger"> No </div>
-                                  {% endif %}
-                                </td>
-                                <td>
-
-                                  <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
-                                </td>
-                              </tr>
-                            {% endfor %}
-                          {% endfor %}
-                        </tbody>
-                      </table>
-                      <hr>
-                      {% if user.is_staff == True %}
-                        {% if ppl_with_patient %}
-                          <a class="btn btn-info btn-block" style="color: white;" href="{% url 'patient:list_ppl_with_patient' patient.id %}"> Patient'in Yanindaki Hekimleri Silmek </a>
-                        {% else %}
-                        
-                        {% endif %}
-                      {% else %}
-                      {% endif %}
-
+                        </table>
+                      <br>
+                      <input type="submit" value="Bitir" class="btn btn-outline-danger btn-block">
                     </div>
                   </div>
                 </div>
               </div>
+
+
               {% comment %} <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
