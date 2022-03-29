@@ -34,15 +34,15 @@
               <div class="d-flex">
                 {% comment %} <button type="button" class="btn btn-sm bg-white btn-icon-text border">
                   <i class="mdi mdi-email btn-icon-prepend"></i> Email </button> {% endcomment %}
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <a href="#"><i class="mdi mdi-book btn-icon-prepend"></i> Loglar </a>
-                </button>
                 {% if user.user_doctors %}
                   <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
                     <a href="{% url 'patient:add_status' patient.id %}"><i class="mdi mdi-book-plus btn-icon-prepend"></i>Status Elave Etmek</a>
                   </button>
 
                 {% else %}
+                  <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
+                    <a href="{% url 'patient:logs' patient.id %}"><i class="mdi mdi-book btn-icon-prepend"></i> Loglar </a>
+                  </button>
                   <div class="dropdown">
                     <button type="button" class="btn btn-success dropdown-toggle" id="dropdownMenuIconButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       <i class="mdi mdi-account"></i>
@@ -577,7 +577,7 @@
                                 </td>
                                 <td>
 
-                                  <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
+                                  <a class="btn btn-success" href="{% url 'doctor:panel' doctor.id %}">Detal</a>
                                 </td>
                               </tr>
                             {% endfor %}

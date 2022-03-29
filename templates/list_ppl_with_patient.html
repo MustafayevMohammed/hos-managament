@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="{% static 'vendors/bootstrap-datepicker/bootstrap-datepicker.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
-    <link rel="stylesheet" href="{% static 'css/operations.css' %}">
+
   </head>
   <body>
     <div class="container-scroller">
@@ -43,7 +43,7 @@
               <div class="col-lg-9 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">"Patient"'in yanindaki hekimleri silmek</h4>
+                    <h4 class="card-title">{{patient.get_full_name}}'in yanindaki hekimleri silmek</h4>
 
                     <div class="table-responsive">
                       <form action="" method="post">

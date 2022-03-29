@@ -14,7 +14,7 @@ class OperationModel(models.Model):
     disease = models.ManyToManyField(DiseaseModel,related_name="disease_operations")
     doctor = models.ManyToManyField("doctors.DoctorModel",blank=False,related_name="doctor_operations")
     starting_date = models.DateTimeField(auto_now_add=True)
-    finished_date = models.DateTimeField(auto_now=True)
+    finished_date = models.DateTimeField(null=True,blank=True)
     patient = models.ForeignKey("patients.PatientModel",on_delete=models.DO_NOTHING,related_name="patient_operations")
     is_active = models.BooleanField(default=True)
 

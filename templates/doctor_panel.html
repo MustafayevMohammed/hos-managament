@@ -350,7 +350,7 @@
                           {% endfor %}
                         </tbody>
                       </table>
-                      <a class="text-black mt-3 d-block pl-4" href="{% url 'doctor:patients' doctor.user.id %}">
+                      <a class="text-black mt-3 d-block pl-4" href="{% url 'doctor:patients' doctor.id %}">
                         <span class="font-weight-medium h6">Bu Doktorun Butun Patientlerin Listi</span>
                         <i class="mdi mdi-chevron-right"></i></a>
                     </div>
@@ -404,7 +404,7 @@
                         </tbody>
                       </table>
                     </div>
-                    <a class="text-black mt-3 d-block pl-4" href="{% url 'doctor:operations' doctor.user.id %}">
+                    <a class="text-black mt-3 d-block pl-4" href="{% url 'doctor:operations' doctor.id %}">
                       <span class="font-weight-medium h6">Bu Doktorun Butun Emeliyyatlarin Listi</span>
                       <i class="mdi mdi-chevron-right"></i></a>
                   </div>

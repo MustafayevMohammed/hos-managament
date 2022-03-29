@@ -205,7 +205,7 @@
                               <td> {{doctor.phonenumber}} </td>
                               <td> {{doctor.blood_type}} </td>
                               <td>
-                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
+                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.id %}">Detal</a>
                               </td>
                               
                             </tr>
@@ -242,7 +242,7 @@
                               <td> {{doctor.phonenumber}} </td>
                               <td> {{doctor.blood_type}} </td>
                               <td>
-                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
+                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.id %}">Detal</a>
                               </td>
                             </tr>
                           {% endfor %}
@@ -285,7 +285,7 @@
                                 {% endif %}
                               </td>
                               <td>
-                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.user.id %}">Detal</a>
+                                <a class="btn btn-success" href="{% url 'doctor:panel' doctor.id %}">Detal</a>
                               </td>
                             </tr>
                           {% endfor %}

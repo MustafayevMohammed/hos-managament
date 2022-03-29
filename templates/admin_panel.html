@@ -288,7 +288,7 @@
                               </td>
                               <td>
                                 {% for doctor in operation.doctor.all %}
-                                 <a href="{% url 'doctor:panel' doctor.user.id %}">
+                                 <a href="{% url 'doctor:panel' doctor.id %}">
                                   {{doctor}},
                                  </a>  
                                 {% endfor %}
@@ -355,7 +355,7 @@
                                 {{doctor.blood_type}}
                               </td>
                               <td>
-                                <a href="{% url 'doctor:panel' doctor.user.id %}" class="btn btn-success btn-sm">
+                                <a href="{% url 'doctor:panel' doctor.id %}" class="btn btn-success btn-sm">
                                    Detal
                                 </a>
                               </td>
