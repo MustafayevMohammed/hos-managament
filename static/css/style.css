@@ -15480,3 +15480,10 @@ dl {
   flex-grow: 1; }
 
 /*# sourceMappingURL=style.css.map */
+
+
+.note-content{
+  word-break: break-all;
+  max-height: 220px;
+  overflow-y: auto;
+}

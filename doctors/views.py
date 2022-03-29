@@ -14,8 +14,7 @@ class DoctorPanelView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
     
     def get(self,request,id):
-        doctor_user = CustomUserModel.objects.filter(id=id).first()
-        doctor = doctor_user.user_doctors
+        doctor = DoctorModel.objects.get(id=id)
 
         active_patients = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = True)
         deactive_patients = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = False)
@@ -23,11 +22,11 @@ class DoctorPanelView(LoginRequiredMixin,View):
         last_five_ppl_with_pat = PeopleWithPatientModel.objects.filter(doctor = doctor).order_by("-id")[:5][::-1]
         last_five_operation = OperationModel.objects.filter(doctor = doctor).order_by("-id")[:5][::-1]
         
-        if request.user != doctor_user:
+        if request.user != doctor.user:
             if DoctorModel.objects.filter(user = request.user).first():
                 return redirect("doctor:panel",request.user.id)
         elif request.user.is_staff:
-            return redirect("doctor:panel",doctor_user.id)
+            return redirect("doctor:panel",doctor.id)
 
         context = {
             "doctor":doctor,
@@ -86,7 +85,8 @@ class PatientsOfDoctorView(LoginRequiredMixin,View):
         return render(request,"patients_of_doctor.html",context)
 
 
-class OperatationsOfDoctorView(View):
+class OperatationsOfDoctorView(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
 
     def get(self,request,id):
         doctor_user = CustomUserModel.objects.get(id=id)

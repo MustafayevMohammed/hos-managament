@@ -194,7 +194,6 @@
                             <th>Disease</th>
                             <th>Doctor(s)</th>
                             <th>Started Date</th>
-                            <th>Finished Date</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -219,7 +218,6 @@
                               <td>
                                 {{operation.starting_date|date}}
                               </td>
-                              <td>{{operation.finished_date|date}}</td>
                               <td>
                                 <a class="btn btn-success" href="{% url 'disease:panel' operation.id %}">Detal</a>
                               </td>
