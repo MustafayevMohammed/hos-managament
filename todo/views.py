@@ -17,5 +17,5 @@ def completeTask(request,id):
         return redirect("/#todo")
     else:
         if DoctorModel.objects.filter(user = request.user).first():
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
         

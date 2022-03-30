@@ -9,7 +9,7 @@
       {% if user.is_superuser == True %}
         <a class="sidebar-brand brand-logo" href="{% url 'account:admin_panel' %}"><img src="{% static 'images/logo.svg' %} "alt="logo" /></a>
       {% else %}
-        <a class="sidebar-brand brand-logo" href="{% url 'doctor:panel' user.id %}"><img src="{% static 'images/logo.svg' %}" alt="logo" /></a>
+        <a class="sidebar-brand brand-logo" href="{% url 'doctor:panel' user.user_doctors.id %}"><img src="{% static 'images/logo.svg' %}" alt="logo" /></a>
       {% endif %}
     </div>
       <ul class="nav">
@@ -35,19 +35,19 @@
         </li>
         {% if user.user_doctors %}
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'doctor:panel' user.id %}">
+              <a class="nav-link" href="{% url 'doctor:panel' user.user_doctors.id %}">
                 <i class="mdi mdi-home menu-icon"></i>
                 <span class="menu-title">Dashboard</span>
               </a>
             </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'doctor:patients' user.id %}">
+                <a class="nav-link" href="{% url 'doctor:patients' user.user_doctors.id %}">
                   <i class="mdi mdi-account-multiple menu-icon"></i>
                   <span class="menu-title">Size Aid Olan Patient'ler</span>
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{% url 'doctor:operations' user.id %}">
+                <a class="nav-link" href="{% url 'doctor:operations' user.user_doctors.id %}">
                   <i class="mdi mdi-briefcase-outline menu-icon"></i>
                   <span class="menu-title">Size Aid Olan Emeliyyatlar</span>
                 </a>
