@@ -64,7 +64,6 @@ class PatientsOfDoctorView(LoginRequiredMixin,View):
     def get(self,request,id):
         doctor = DoctorModel.objects.get(id=id)
 
-
         patients = PeopleWithPatientModel.objects.filter(doctor = doctor)
         active_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = True)
         deactive_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = False)

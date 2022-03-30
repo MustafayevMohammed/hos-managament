@@ -336,3 +336,20 @@ class PatientLogsView(LoginRequiredMixin,View):
         }
         return render(request,"patient_logs.html",context)
 
+
+class ActivateDeactivatePatientView(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
+
+    def get(self, request, *args, **kwargs):
+        patient = PatientModel.objects.get(id=self.kwargs.get("id"))
+        
+        if patient.is_active == True:
+            patient.is_active = False
+            patient.save()
+            messages.success(request,"patient deaktiv edildi")
+            return redirect("patient:panel",patient.id)
+        else:
+            patient.is_active = True
+            patient.save()
+            messages.success(request,"patient aktiv edildi")
+            return redirect("patient:panel",patient.id)
