@@ -15,7 +15,7 @@ class OperationListView(LoginRequiredMixin,View):
         deactive_operations = OperationModel.objects.filter(is_active = False)
 
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "operations":operations,
@@ -35,7 +35,7 @@ class OperationPanelView(LoginRequiredMixin,View):
 
         if not doctor:
             if DoctorModel.objects.filter(user = request.user):
-                return redirect("doctor:panel",request.user.id)
+                return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "operation":operation,

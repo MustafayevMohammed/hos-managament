@@ -25,7 +25,7 @@ class PatientListView(LoginRequiredMixin,View):
         deactive_patients = PatientModel.objects.filter(is_active = False)
 
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "patients":patients,
@@ -46,7 +46,7 @@ class PatientPanelView(LoginRequiredMixin,View):
 
         if not doctor:
             if DoctorModel.objects.filter(user = request.user):
-                return redirect("doctor:panel",request.user.id)
+                return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "patient":patient,
@@ -252,10 +252,13 @@ class AddPplWithPatientView(LoginRequiredMixin,FormView):
         patient = PatientModel.objects.get(id = self.kwargs.get("id"))
         doctors = form.cleaned_data.get("doctor")
         patient_doctors = DoctorModel.objects.filter(id__in=doctors)
+        print(patient_doctors)
         ppl_with_patient = PeopleWithPatientModel.objects.filter(patient=patient,doctor__in=patient_doctors,is_active=False)
+        print(ppl_with_patient)
 
         for doctor in patient_doctors:
-            if PeopleWithPatientModel.objects.filter(patient=patient,doctor__in=patient_doctors).exists():
+            print(doctor)
+            if PeopleWithPatientModel.objects.filter(patient=patient,doctor=doctor).exists():
                 if ppl_with_patient.exists():
                     ppl_with_patient.update(is_active=True)
                     return redirect("patient:panel",patient.id)
@@ -283,7 +286,7 @@ class ListPplWithPatientView(LoginRequiredMixin,View):
         ppl_with_patient = PeopleWithPatientModel.objects.filter(patient=patient,is_active = True)
         
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "patient":patient,
@@ -319,7 +322,7 @@ class PatientLogsView(LoginRequiredMixin,View):
         notes_about_patient = PatientStatusModel.objects.filter(patient=patient).order_by("-id")
         
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
             "patient":patient,
@@ -333,3 +336,20 @@ class PatientLogsView(LoginRequiredMixin,View):
         }
         return render(request,"patient_logs.html",context)
 
+
+class ActivateDeactivatePatientView(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
+
+    def get(self, request, *args, **kwargs):
+        patient = PatientModel.objects.get(id=self.kwargs.get("id"))
+        
+        if patient.is_active == True:
+            patient.is_active = False
+            patient.save()
+            messages.success(request,"patient deaktiv edildi")
+            return redirect("patient:panel",patient.id)
+        else:
+            patient.is_active = True
+            patient.save()
+            messages.success(request,"patient aktiv edildi")
+            return redirect("patient:panel",patient.id)

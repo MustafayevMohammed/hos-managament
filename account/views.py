@@ -15,7 +15,7 @@ class AdminPanelView(LoginRequiredMixin,View):
 
     def get(self,request):
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
         doctors = DoctorModel.objects.all()
         patients = PatientModel.objects.all()

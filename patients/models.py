@@ -1,22 +1,13 @@
 from django.db import models
 from django.urls import reverse
 # from phonenumber_field.modelfields import PhoneNumberField
+from account.models import GenderModel, BloodTypeModel
 # from disease.models import DiseaseModel
 
 # Create your models here.
 
 
-class BloodTypeModel(models.Model):
-    name = models.CharField(max_length=10)
 
-    def __str__(self):
-        return self.name
-
-class GenderModel(models.Model):
-    name = models.CharField(max_length=20)
-    
-    def __str__(self):
-        return self.name
 
 class PatientModel(models.Model):
 

@@ -1,6 +1,6 @@
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import View
+from django.views.generic import View, UpdateView
 from doctors.models import DoctorModel
 from disease.models import OperationModel
 from account.models import CustomUserModel
@@ -24,7 +24,7 @@ class DoctorPanelView(LoginRequiredMixin,View):
         
         if request.user != doctor.user:
             if DoctorModel.objects.filter(user = request.user).first():
-                return redirect("doctor:panel",request.user.id)
+                return redirect("doctor:panel",request.user.user_doctors.id)
         elif request.user.is_staff:
             return redirect("doctor:panel",doctor.id)
 
@@ -48,7 +48,7 @@ class DoctorListView(LoginRequiredMixin,View):
 
 
         if request.user.is_staff == False:
-            return redirect("doctor:panel",request.user.id)
+            return redirect("doctor:panel",request.user.user_doctors.id)
         
         context = {
             "doctors":doctors,
@@ -62,18 +62,17 @@ class PatientsOfDoctorView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request,id):
-        doctor_user = CustomUserModel.objects.get(id=id)
-        doctor = doctor_user.user_doctors
+        doctor = DoctorModel.objects.get(id=id)
 
         patients = PeopleWithPatientModel.objects.filter(doctor = doctor)
         active_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = True)
         deactive_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = False)
 
-        if request.user != doctor_user:
+        if request.user != doctor.user:
             if DoctorModel.objects.filter(user = request.user).first():
-                return redirect("doctor:panel",request.user.id)
+                return redirect("doctor:panel",request.user.user_doctors.id)
         elif request.user.is_staff:
-            return redirect("doctor:patients",doctor_user.id)
+            return redirect("doctor:patients",doctor.id)
 
         context = {
             "patients":patients,
@@ -89,20 +88,17 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request,id):
-        doctor_user = CustomUserModel.objects.get(id=id)
-        doctor = doctor_user.user_doctors
+        doctor = DoctorModel.objects.get(id=id)
 
         operations = OperationModel.objects.filter(doctor = doctor)
         active_operations = OperationModel.objects.filter(doctor = doctor,is_active = True)
         deactive_operations = OperationModel.objects.filter(doctor = doctor,is_active = False)
 
-
-        if request.user != doctor_user:
+        if request.user != doctor.user:
             if DoctorModel.objects.filter(user = request.user).first():
-                return redirect("doctor:panel",request.user.id)
+                return redirect("doctor:panel",request.user.user_doctors.id)
         elif request.user.is_staff:
-            return redirect("doctor:operations",doctor_user.id)
-
+            return redirect("doctor:operations",doctor.id)
 
         context = {
             "operations":operations,
@@ -110,16 +106,13 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
             "deactive_operations":deactive_operations,
             "doctor":doctor
         }
-
         return render(request,"operations_of_doctor.html",context)
-
-
 
 
 def doctor_edit(request):
     return render(request,"doctor_edit.html")
 
-class DoctorEditFormView(FormView):
+class DoctorEditFormView(UpdateView):
     template_name = "doctor_edit.html"
 
 
