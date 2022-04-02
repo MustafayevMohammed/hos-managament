@@ -477,7 +477,11 @@
                     {% else %}
                       <a href="{% url 'patient:edit' patient.id %}" class="btn btn-outline-success btn-block mt-2">Patient'i Editlemek</a>
                       <hr>
-                      <a href="#" class="btn btn-outline-danger btn-block mt-2">Patient'i Deaktiv Etmek</a>
+                      {% if patient.is_active == True %}
+                        <a class="btn btn-outline-danger btn-block" href="{% url 'patient:activate_deactivate' patient.id %}">Patient'i Deaktiv Etmek</a>
+                      {% else %}
+                        <a class="btn btn-outline-danger btn-block" href="{% url 'patient:activate_deactivate' patient.id %}">Patient'i Aktiv Etmek</a>
+                      {% endif %}
                     {% endif %}
                   </div>
                 </div>

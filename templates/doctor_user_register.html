@@ -525,25 +525,34 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Doctor Register</h4>
-                    <p class="card-description">Bu Form'u Doldurduqdan Sonra Eyer Admin Sizi Qebul Etse Qeydiyyat'in Bir Sonraki Merhelesine Kececeksiniz</p>
-                    <form class="forms-sample">
+                    {% if form.errors %}
+                      <div class="error alert alert-danger">
+                        {{form.errors}}
+                      </div>
+                    {% else %}
+                    {% endif %}
+                    <p class="card-description">Bu Form'u Doldurduqdan Sonra Eger Admin Sizi Qebul Etse Qeydiyyat'in Bir Sonraki Merhelesine Kececeksiniz</p>
+                    <form class="forms-sample" method="post" action="">
+                      {% csrf_token %}
                       <div class="form-group">
                         <label for="exampleInputEmail1">Email address</label>
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" />
+                        <input type="email" class="form-control" name="email" id="exampleInputEmail1" placeholder="Email" />
                       </div>
                       <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" />
+                        <input type="password" class="form-control" name="password1" id="exampleInputPassword1" placeholder="Password" />
                       </div>
                       <div class="form-group">
                         <label for="exampleInputConfirmPassword1">Confirm Password</label>
-                        <input type="password" class="form-control" id="exampleInputConfirmPassword1" placeholder="Password" />
+                        <input type="password" class="form-control" name="password2" id="exampleInputConfirmPassword1" placeholder="Password" />
                       </div>
                       {% comment %} <div class="form-check form-check-flat form-check-primary">
                         <label class="form-check-label">
                           <input type="checkbox" class="form-check-input" /> Remember me </label>
                       </div> {% endcomment %}
                       <button type="submit" class="btn btn-primary mr-2"> Submit </button>
+                      <a href="{% url 'doctor:login' %}"> Hesabiniz Var?</a>
+
                     </form>
                   </div>
                 </div>

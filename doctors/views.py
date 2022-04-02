@@ -1,12 +1,16 @@
+from urllib import request
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import View, UpdateView
-from doctors.models import DoctorModel
+from doctors.models import DoctorField, DoctorModel
 from disease.models import OperationModel
-from account.models import CustomUserModel
+from account.models import BloodTypeModel, CustomUserModel, GenderModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from patients.models import PatientModel, PeopleWithPatientModel
-from django.views.generic import FormView
+from django.views.generic import FormView, CreateView
+from doctors.forms import DoctorForm
+from account.forms import RegisterForm
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -109,11 +113,58 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
         return render(request,"operations_of_doctor.html",context)
 
 
-def doctor_edit(request):
-    return render(request,"doctor_edit.html")
+
 
 class DoctorEditFormView(UpdateView):
     template_name = "doctor_edit.html"
+    form_class = DoctorForm
+
+    def get_object(self,*args, **kwargs):
+        return DoctorModel.objects.get(id=self.kwargs.get("id"))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["doctor"] = self.get_object
+        context["gender_choices"] = GenderModel.objects.all()
+        context["working_field_choices"] = DoctorField.objects.all()
+        context["blood_type_choices"] = BloodTypeModel.objects.all()
+        return context
+    
+    def dispatch(self, request, *args, **kwargs):
+        doctor = DoctorModel.objects.get(id=self.kwargs.get("id"))
+        
+        if doctor.user != request.user:
+            if DoctorModel.objects.filter(user = request.user).first():
+                return redirect("/")
+        elif request.user.is_staff:
+            return redirect("doctor:edit",doctor.id)
+            
+        return super().dispatch(request, *args, **kwargs)
+    
+    
+
+def admin_permission_waiting(request):
+    if request.user.is_accepted == True:
+        return redirect("doctor:admin_permission_accepted")
+
+    return render(request,"admin_permission_waiting.html")
+
+def admin_permission_accepted(request):
+    if request.user.is_accepted == False:
+        return redirect("doctor:admin_permission_waiting")
+
+    return render(request,"admin_permission_accepted.html")
+
+
+class DoctorUserRegister(CreateView):
+    template_name = 'doctor_user_register.html'
+    success_url = reverse_lazy('doctor:admin_permission_waiting')
+    form_class = RegisterForm
+    
+    def form_valid(self,form,*args, **kwargs):
+        user = form.save()
+        login(self.request,user)
+        return redirect("doctor:admin_permission_waiting")
 
 
 def doctor_logs(request):
@@ -131,17 +182,12 @@ def doctor_login(request):
 
 
 
-def admin_register(request):
-    return render(request,"admin_register.html")
+# def admin_register(request):
+#     return render(request,"admin_register.html")
 
-def admin_login(request):
-    return render(request,"admin_login.html")
+# def admin_login(request):
+#     return render(request,"admin_login.html")
 
-def admin_permission_waiting(request):
-    return render(request,"admin_permission_waiting.html")
-
-def admin_permission_accepted(request):
-    return render(request,"admin_permission_accepted.html")
 
 
 
