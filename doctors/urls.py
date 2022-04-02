@@ -29,9 +29,9 @@ urlpatterns = [
 
     path("panel/<int:id>",views.DoctorPanelView.as_view(),name = "panel"),
     path("list/",views.DoctorListView.as_view(),name = "list"),
-    path("edit/",views.doctor_edit,name = "edit"),
+    path("edit/<str:id>",views.DoctorEditFormView.as_view(),name = "edit"),
     path("logs/",views.doctor_logs,name = "logs"),
-    path("user_register/",views.doctor_user_register, name = "user_register"),
+    path("user_register/",views.DoctorUserRegister.as_view(), name = "user_register"),
     path("register/",views.doctor_register, name = "register"),
     path("login/",views.doctor_login, name = "login"),
     

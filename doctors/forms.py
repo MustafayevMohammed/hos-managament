@@ -2,7 +2,7 @@ from django import forms
 from doctors.models import DoctorModel
 
 
-class DoctorRegisterForm(forms.ModelForm):
+class DoctorForm(forms.ModelForm):
     
     class Meta:
         model = DoctorModel

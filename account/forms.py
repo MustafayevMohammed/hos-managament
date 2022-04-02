@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import get_user_model
+
 
 # attrs={"class":"form-control","type":"email","id":"exampleInputEmail1","placeholder":"Email"}
 
@@ -11,7 +13,7 @@ class RegisterForm(UserCreationForm):
     password2 = forms.CharField(widget=forms.PasswordInput())
 
     class Meta:
-        model = "account.CustomUserModel"
+        model = get_user_model()
         fields = ["email","password1","password2"]
 
 

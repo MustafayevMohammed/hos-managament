@@ -4,6 +4,7 @@ from phonenumber_field.modelfields import PhoneNumberField
 from disease.models import OperationModel
 from patients.models import PatientStatusModel, PeopleWithPatientModel
 from account.models import GenderModel,BloodTypeModel
+from django.urls import reverse
 # Create your models here.
 
 
@@ -30,6 +31,8 @@ class DoctorModel(models.Model):
     def get_full_name(self):
         return self.first_name + ' ' + self.last_name
 
+    def get_absolute_url(self):
+        return reverse("doctor:panel", kwargs={"id": self.id})
 
     def __str__(self):
         return self.first_name + " " + self.last_name

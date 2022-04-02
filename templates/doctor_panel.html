@@ -42,7 +42,7 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton9" style="">
                       <h6 class="dropdown-header">Settings</h6>
-                      <a class="dropdown-item" href="#">Doctor Edit</a>
+                      <a class="dropdown-item" href="{% url 'doctor:edit' doctor.id %}">Doctor Edit</a>
                       {% if user.is_staff == True %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Doktor'u Deaktiv Etmek</a>  
