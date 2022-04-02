@@ -115,7 +115,7 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
 
 
 
-class DoctorEditFormView(UpdateView):
+class DoctorEditView(UpdateView):
     template_name = "doctor_edit.html"
     form_class = DoctorForm
 
@@ -140,6 +140,7 @@ class DoctorEditFormView(UpdateView):
             return redirect("doctor:edit",doctor.id)
             
         return super().dispatch(request, *args, **kwargs)
+
     
     
 
@@ -167,14 +168,36 @@ class DoctorUserRegister(CreateView):
         return redirect("doctor:admin_permission_waiting")
 
 
+class DoctorCreateView(CreateView):
+    template_name = "doctor_create.html"
+    form_class = DoctorForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["working_field_choices"] = DoctorField.objects.all()
+        context["gender_choices"] = GenderModel.objects.all()
+        context["blood_type_choices"] = BloodTypeModel.objects.all()
+        return context
+    
+    def form_valid(self,form,*args, **kwargs):
+        instance = form.save(commit=False)
+        instance.user = self.request.user
+        instance.save()
+        return redirect("/")
+    
+    def form_invalid(self,form,*args, **kwargs):
+        print(form.errors)
+        return super().form_invalid(form)
+
+        
+
+
+
+
 def doctor_logs(request):
     return render(request,"doctor_logs.html")
 
-def doctor_user_register(request):
-    return render(request,"doctor_user_register.html")
 
-def doctor_register(request):
-    return render(request,"doctor_register.html")
 
 def doctor_login(request):
     return render(request,"doctor_login.html")

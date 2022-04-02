@@ -40,13 +40,6 @@
             <div class="page-header flex-wrap">
               <h3 class="mb-0"> Doktor Qeydiyyati <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Doktor Olaraq Qeydiyatdan Kecmek Ucun Son Merhele</span>
               </h3>
-              <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ml-3 btn-success"> Add User </button>
-              </div>
             </div>
             {% comment %} <div class="d-flex row">
               <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
@@ -579,11 +572,10 @@
                           <label class="col-sm-6 col-form-label">Working Field</label>
                           <div class="form-group row">
                             <div class="col-sm-9">
-                              <select class="form-control single-select" name="working_field[]">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              <select class="form-control single-select" name="working_field">
+                                {% for working_field in working_field_choices %}
+                                  <option value="{{working_field.id}}"> {{working_field.name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -624,10 +616,9 @@
                           <div class="form-group row">
                             <div class="col-sm-9">
                               <select class="form-control" name="gender" >
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                                {% for gender in gender_choices %}
+                                  <option value="{{gender.id}}"> {{gender.name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -637,10 +628,9 @@
                           <div class="form-group row">
                             <div class="col-sm-9">
                               <select class="form-control" name="blood_type">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                                {% for blood_type in blood_type_choices %}
+                                  <option value="{{blood_type.id}}">{{blood_type.name}}</option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -1238,6 +1228,12 @@
         preferredCountries: ["az", "co", "in", "de"],
         utilsScript:
           "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+      });
+      $("form").submit(function() {
+        var full_number = phoneInput.getNumber(intlTelInputUtils.numberFormat.E164);
+      $("input[name='phonenumber'").val(full_number);
+        alert(full_number)
+  
       });
 
     </script>

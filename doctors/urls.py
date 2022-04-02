@@ -29,10 +29,10 @@ urlpatterns = [
 
     path("panel/<int:id>",views.DoctorPanelView.as_view(),name = "panel"),
     path("list/",views.DoctorListView.as_view(),name = "list"),
-    path("edit/<str:id>",views.DoctorEditFormView.as_view(),name = "edit"),
+    path("edit/<str:id>",views.DoctorEditView.as_view(),name = "edit"),
     path("logs/",views.doctor_logs,name = "logs"),
-    path("user_register/",views.DoctorUserRegister.as_view(), name = "user_register"),
-    path("register/",views.doctor_register, name = "register"),
+    path("register/",views.DoctorUserRegister.as_view(), name = "register"),
+    path("create/",views.DoctorCreateView.as_view(), name = "create"),
     path("login/",views.doctor_login, name = "login"),
     
     path("patients/<str:id>",views.PatientsOfDoctorView.as_view(),name="patients"),
