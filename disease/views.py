@@ -32,10 +32,16 @@ class OperationPanelView(LoginRequiredMixin,View):
     def get(self,request,id):
         operation = OperationModel.objects.get(id=id)
         doctor = DoctorModel.objects.filter(doctor_operations = operation, user = request.user).first()
+        # print(doctor)
 
         if not doctor:
-            if DoctorModel.objects.filter(user = request.user):
+            if DoctorModel.objects.filter(user = request.user, user__is_accepted = True).exists():
                 return redirect("doctor:panel",request.user.user_doctors.id)
+            elif DoctorModel.objects.filter(user = request.user, user__is_accepted = False).exists():
+                return redirect("doctor:admin_permission_waiting")
+        
+        elif doctor.user.is_accepted == False:
+            return redirect("doctor:admin_permission_waiting")
 
         context = {
             "operation":operation,
