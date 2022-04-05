@@ -6,7 +6,7 @@ from doctors.models import DoctorField, DoctorModel
 from disease.models import OperationModel
 from account.models import BloodTypeModel, CustomUserModel, GenderModel
 from django.contrib.auth.mixins import LoginRequiredMixin
-from patients.models import PatientModel, PeopleWithPatientModel
+from patients.models import PatientModel, PatientStatusModel, PeopleWithPatientModel
 from django.views.generic import FormView, CreateView
 from doctors.forms import DoctorForm
 from account.forms import RegisterForm, LoginForm
@@ -297,9 +297,40 @@ class DoctorLogoutView(LoginRequiredMixin,View):
 
 
 
+class DoctorLogs(View):
 
-def doctor_logs(request):
-    return render(request,"doctor_logs.html")
+    def get(self,request,*args, **kwargs):
+        doctor = DoctorModel.objects.get(id=kwargs.get("id"))
+
+        all_operations = OperationModel.objects.filter(doctor = doctor)
+        active_operations = OperationModel.objects.filter(doctor = doctor, is_active = True)
+        deactive_operations = OperationModel.objects.filter(doctor = doctor, is_active = False)
+
+        all_ppl_with_patient = PeopleWithPatientModel.objects.filter(doctor = doctor)
+        active_ppl_with_patient = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = True)
+        deactive_ppl_with_patient = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = False)
+
+        doctor_notes = PatientStatusModel.objects.filter(doctor = doctor)
+
+
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+
+        if request.user.is_staff == False:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
+            return redirect("doctor:panel",request.user.user_doctors.id)
+
+        context = {
+            "doctor":doctor,
+            "all_operations":all_operations,
+            "active_operations":active_operations,
+            "deactive_operations":deactive_operations,
+            "all_ppl_with_patient":all_ppl_with_patient,
+            "active_ppl_with_patient":active_ppl_with_patient,
+            "deactive_ppl_with_patient":deactive_ppl_with_patient,
+            "doctor_notes":doctor_notes,
+        }
+        return render(request,"doctor_logs.html",context)
 
 
 # def admin_register(request):

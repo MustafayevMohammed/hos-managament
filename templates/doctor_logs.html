@@ -15,8 +15,12 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
     <link rel="stylesheet" href="{% static 'css/operations.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}">
     {% include "includes/header_plugins.html" %}
 
+
+
+  
   </head>
   <body>
     <div class="container-scroller">
@@ -29,15 +33,8 @@
         <div class="main-panel">
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
-              <h3 class="mb-0"> Doctor Logs <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Doctorun Etdiyi Butun Seylerin Loglari </span>
+              <h3 class="mb-0"> Doctor Logs <span class="pl-0 h4 pl-sm-2 d-inline-block"> {{doctor.get_full_name}} </span>  <span class="text-muted">Etdiyi Butun Seylerin Loglari </span> 
               </h3>
-              <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ml-3 btn-success"> Add Operation </button>
-              </div>
             </div>
 
             <div class="row">
@@ -49,259 +46,346 @@
                       <table class="table">
                         <thead>
                           <tr>
-                            <th>Patient</th>
                             <th>Name</th>
                             <th>Disease</th>
+                            <th>Patient(s)</th>
+                            <th>Doctor(s)</th>
+                            <th>Started Date</th>
+                            <th>Finished Date</th>
+                            <th>Bitib?</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for operation in all_operations %}
+                            <tr>
+                              <td class="">
+                                {{operation.name}}
+                              </td>
+                              <td class="">
+                                {% for disease in operation.disease.all %}
+                                  {{disease.name}}
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{operation.patient.get_full_name}}
+                              </td>
+                              <td>
+                                {% for doctor in operation.doctor.all %}
+                                  {{doctor.get_full_name}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{operation.starting_date}}
+                              </td>
+                              <td>
+                                {% if operation.finished_date %}
+                                  {{operation.finished_date}}
+                                {% else %}
+                                  Bitmeyib
+                                {% endif %}
+                              </td>
+                              <td>
+                                {% if operation.is_active == True %}
+                                  <div class="badge badge-inverse-success"> Yes </div>
+                                {% else %}
+                                  <div class="badge badge-inverse-danger"> No </div>
+                                {% endif %}
+                              </td>
+                              <td>
+                                <a href="{% url 'disease:panel' operation.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body px-0 overflow-auto">
+                    <h4 class="card-title pl-4">Doctorun Oldugu Aktiv Emeliyyatlar</h4>
+                    <div class="table-responsive table-hover">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Disease</th>
+                            <th>Patient(s)</th>
+                            <th>Doctor(s)</th>
+                            <th>Started Date</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for operation in active_operations %}
+                            <tr>
+                              <td class="">
+                                {{operation.name}}
+                              </td>
+                              <td class="">
+                                {{operation.name}}
+                              </td>
+                              <td>
+                                {% for disease in operation.disease.all %}
+                                  {{disease.name}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {% for doctor in operation.doctor.all %}
+                                  {{doctor.get_full_name}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{operation.starting_date}}
+                              </td>
+                              <td>
+                                <a href="{% url 'disease:panel' operation.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body px-0 overflow-auto">
+                    <h4 class="card-title pl-4">Doctorun Kecmisde Oldugu Emeliyyatlar</h4>
+                    <div class="table-responsive table-hover">
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th>Name</th>
+                            <th>Disease</th>
+                            <th>Patient(s)</th>
                             <th>Doctor(s)</th>
                             <th>Started Date</th>
                             <th>Finished Date</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Herman Beck</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>Messsy Adam</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$245.30</td>
-                            <td>July 1, 2015</td>
-                            <td>July 1, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>John Richards</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$138.00</td>
-                            <td>Apr 12, 2015</td>
-                            <td>Apr 12, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-4.png" alt="image" />
-                            </td>
-                            <td>Peter Meggik</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Edward</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 160.25</td>
-                            <td>May 03, 2015</td>
-                            <td>May 03, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>John Doe</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 123.21</td>
-                            <td>April 05, 2015</td>
-                            <td>April 05, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>Henry Tom</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 150.00</td>
-                            <td>June 16, 2015</td>
-                            <td>June 16, 2015</td>
+                          {% for operation in deactive_operations %}
                             <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
+                              <td class="">
+                                {{operation.name}}
                               </td>
-                              <td>Henry Tom</td>
+                              <td class="">
+                                {{operation.name}}
+                              </td>
                               <td>
-                                Mustafazade
+                                {% for disease in operation.disease.all %}
+                                  {{disease.name}}, <br>
+                                {% endfor %}
                               </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
                               <td>
-                                  Mustafazade
+                                {% for doctor in operation.doctor.all %}
+                                  {{doctor.get_full_name}}, <br>
+                                {% endfor %}
                               </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                              <td>June 16, 2015</td>
+                              <td>
+                                {{operation.starting_date}}
+                              </td>
+                              <td>
+                                {{operation.finished_date}}
+                              </td>
+                              <td>
+                                <a href="{% url 'disease:panel' operation.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
                             </tr>
-                          </tr>
+                          {% endfor %}
+
                         </tbody>
                       </table>
                     </div>
-                    <a class="text-black mt-3 d-block pl-4" href="#">
-                      <span class="font-weight-medium h6">View all order history</span>
-                      <i class="mdi mdi-chevron-right"></i></a>
                   </div>
                 </div>
               </div>
               <div class="col-lg-12 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Doktorun Indiye Kimi Yaninda Oldugu Butun Patient'ler</h4>
-                    <p class="card-description"> Add class <code>.table-striped</code>
-                    </p>
+                    <h4 class="card-title">Doctorun Indiye Kimi Yaninda Oldugu Patientler</h4>
                     <div class="table-responsive">
                       <table class="table table-hover">
                         <thead>
                           <tr>
-                            <th>Patient</th>
-                            <th>Name</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
                             <th>Disease</th>
-                            <th>Doctor(s)</th>
-                            <th>Started Date</th>
-                            <th>Finished Date</th>
+                            <th>Phone Number</th>
+                            <th>Blood Type</th>
+                            <th>Patient Aktivdir?</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Herman Beck</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>Messsy Adam</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$245.30</td>
-                            <td>July 1, 2015</td>
-                            <td>July 1, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>John Richards</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$138.00</td>
-                            <td>Apr 12, 2015</td>
-                            <td>Apr 12, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-4.png" alt="image" />
-                            </td>
-                            <td>Peter Meggik</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Edward</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 160.25</td>
-                            <td>May 03, 2015</td>
-                            <td>May 03, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>John Doe</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 123.21</td>
-                            <td>April 05, 2015</td>
-                            <td>April 05, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>Henry Tom</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 150.00</td>
-                            <td>June 16, 2015</td>
-                            <td>June 16, 2015</td>
+                          {% for patient in all_ppl_with_patient %}
                             <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
+                              <td class="">
+                                {{patient.patient.first_name}}
                               </td>
-                              <td>Henry Tom</td>
                               <td>
-                                Mustafazade
+                                {{patient.patient.last_name}}
                               </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
                               <td>
-                                  Mustafazade
+                                {{patient.patient.gender}}
                               </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                              <td>June 16, 2015</td>
+                              <td>
+                                {% for disease in patient.patient.disease.all %}
+                                  {{disease}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{patient.patient.phonenumber}}
+                              </td>
+                              <td>
+                                {{patient.patient.blood_type}}
+                              </td>
+                              <td>
+                                {% if patient.is_active == True %}
+                                  <div class="badge badge-inverse-success"> Yes </div>
+                                {% else %}
+                                  <div class="badge badge-inverse-danger"> No </div>
+                                {% endif %}
+                              </td>
+                              <td>
+                                <a href="{% url 'patient:panel' patient.patient.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
                             </tr>
+
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Doctorun Hal Hazirda Yaninda Oldugu Patientler</h4>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Disease</th>
+                            <th>Phone Number</th>
+                            <th>Blood Type</th>
+                            <th>Patient Aktivdir?</th>
                           </tr>
+                        </thead>
+                        <tbody>
+                          {% for patient in active_ppl_with_patient %}
+                            <tr>
+                              <td class="">
+                                {{patient.patient.first_name}}
+                              </td>
+                              <td>
+                                {{patient.patient.last_name}}
+                              </td>
+                              <td>
+                                {{patient.patient.gender}}
+                              </td>
+                              <td>
+                                {% for disease in patient.patient.disease.all %}
+                                  {{disease}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{patient.patient.phonenumber}}
+                              </td>
+                              <td>
+                                {{patient.patient.blood_type}}
+                              </td>
+                              <td>
+                                {% if patient.is_active == True %}
+                                  <div class="badge badge-inverse-success"> Yes </div>
+                                {% else %}
+                                  <div class="badge badge-inverse-danger"> No </div>
+                                {% endif %}
+                              </td>
+                              <td>
+                                <a href="{% url 'patient:panel' patient.patient.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
+                            </tr>
+
+                          {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-12 grid-margin stretch-card">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Doctorun Kecmisde Yaninda Oldugu Patientler</h4>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                        <thead>
+                          <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Disease</th>
+                            <th>Phone Number</th>
+                            <th>Blood Type</th>
+                            <th>Patient Aktivdir?</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% for patient in deactive_ppl_with_patient %}
+                            <tr>
+                              <td class="">
+                                {{patient.patient.first_name}}
+                              </td>
+                              <td>
+                                {{patient.patient.last_name}}
+                              </td>
+                              <td>
+                                {{patient.patient.gender}}
+                              </td>
+                              <td>
+                                {% for disease in patient.patient.disease.all %}
+                                  {{disease}}, <br>
+                                {% endfor %}
+                              </td>
+                              <td>
+                                {{patient.patient.phonenumber}}
+                              </td>
+                              <td>
+                                {{patient.patient.blood_type}}
+                              </td>
+                              <td>
+                                {% if patient.is_active == True %}
+                                  <div class="badge badge-inverse-success"> Yes </div>
+                                {% else %}
+                                  <div class="badge badge-inverse-danger"> No </div>
+                                {% endif %}
+                              </td>
+                              <td>
+                                <a href="{% url 'patient:panel' patient.patient.id %}" class="btn btn-success btn-sm">
+                                  Detal
+                                </a>
+                              </td>
+                            </tr>
+
+                          {% endfor %}
                         </tbody>
                       </table>
                     </div>
@@ -309,35 +393,41 @@
                 </div>
               </div>
 
+
+
+              {% if doctor_notes %}
               <div class="page-header flex-wrap">
-                <h3 class="mb-0 doctor-notes-header"> Doctor Notes <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Doctorun Patientler Haqqinda Yazdigi Notlar </span>
+                <h3 class="mb-0 doctor-notes-header"> Doctor Notes <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Doctorun Patientler Haqqinda Yazdigi Butun Notlar </span>
                 </h3>
               </div>
-
+              {% for note in doctor_notes %}
               <div class="row d-flex ">
                 <div class="col grid-margin stretch-card">
                   <div class="col-md-8 grid-margin stretch-card">
                     <div class="card">
                       <div class="card-body">
                         
-                        <h4 class="card-title">Doktorun Xesteler Haqqinda Yazdigi Butun Notlar</h4>
-                        <p class="card-description"> Write text in tag </p>
-                        <p> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley not only five centuries, </p>
+                        <h4 class="card-title">Note'un Mezmunu</h4>
+                        <hr>
+                        {% comment %} <p class="card-description"> Write text in tag </p> {% endcomment %}
+                        <p class="note-content"> 
+                          {{note.note}}
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div class="col-md-4 grid-margin stretch-card">
                     <div class="card">
                       <div class="card-body">
-                        <h4 class="card-title">Patient Haqqinda Melumatlar</h4>
+                        <h4 class="card-title">Note Haqqinda Melumatlar</h4>
                         {% comment %} <p class="card-description"> Add class <code>.table-hover</code> {% endcomment %}
                         </p>
                         <div class="table-responsive">
                           <table class="table ">
                             <tbody>
                               <tr>
-                                <td class="font-weight-bold">First Name</td>
-                                <td>Photoshop</td>
+                                <td class="font-weight-bold">Yazilan Patient</td>
+                                <td>{{note.doctor.get_full_name}}</td>
                                 {% comment %} <td class="text-danger"> 28.76% <i class="mdi mdi-arrow-down"></i>
                                 </td>
                                 <td>
@@ -345,8 +435,8 @@
                                 </td> {% endcomment %}
                               </tr>
                               <tr>
-                                <td class="font-weight-bold">Last Name</td>
-                                <td>Flash</td>
+                                <td class="font-weight-bold">Status</td>
+                                <td>{{note.status}}</td>
                                 {% comment %} <td class="text-danger"> 21.06% <i class="mdi mdi-arrow-down"></i>
                                 </td>
                                 <td>
@@ -354,8 +444,8 @@
                                 </td> {% endcomment %}
                               </tr>
                               <tr>
-                                <td class="font-weight-bold">Gender</td>
-                                <td>Premier</td>
+                                <td class="font-weight-bold">Yazildigi Tarix</td>
+                                <td>{{note.date}}</td>
                                 {% comment %} <td class="text-danger"> 35.00% <i class="mdi mdi-arrow-down"></i>
                                 </td>
                                 <td>
@@ -366,16 +456,20 @@
                               {% comment %} </tr> {% endcomment %}
                             </tbody>
                           </table>
+                          <hr>
+                          <a href="{% url 'patient:panel' note.patient.id %}" class="btn btn-outline-behance btn-block">Patient'in Paneline Kecid</a>
                         </div>
-                        <hr>
-                        <a href="#" class="btn btn-outline-behance btn-block">Patient'in Paneline Kecid</a>
                       </div>
                     </div>
                   </div>
-                  
                 </div>
 
               </div> 
+            {% endfor %}
+              {% else %}
+                <div class="badge m-3 badge-danger">Doctor Hec Bir Note Yazmayib</div>
+              {% endif %}
+
               {% comment %} <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
