@@ -34,6 +34,7 @@ urlpatterns = [
     path("register/",views.DoctorUserRegister.as_view(), name = "register"),
     path("create/",views.DoctorCreateView.as_view(), name = "create"),
     path("login/",views.DoctorLoginView.as_view(), name = "login"),
+    path("logout/",views.DoctorLogoutView.as_view(), name = "logout"),
     
     path("patients/<str:id>",views.PatientsOfDoctorView.as_view(),name="patients"),
     path("operations/<str:id>",views.OperatationsOfDoctorView.as_view(),name="operations"),

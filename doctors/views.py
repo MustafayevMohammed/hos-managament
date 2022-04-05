@@ -9,8 +9,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from patients.models import PatientModel, PeopleWithPatientModel
 from django.views.generic import FormView, CreateView
 from doctors.forms import DoctorForm
-from account.forms import RegisterForm
-from django.contrib.auth import login
+from account.forms import RegisterForm, LoginForm
+from django.contrib.auth import login, logout, authenticate
+from django.contrib import messages
+
 
 # Create your views here.
 
@@ -260,20 +262,44 @@ class DoctorCreateView(CreateView):
         
 
 class DoctorLoginView(View):
+    form_class = LoginForm
 
     def get(self,request, *args, **kwargs):
         return render(request,"doctor_login.html")
+
+    def post(self,request,*args, **kwargs):
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password")
+            user = authenticate(email=email,password=password)
+
+            if user is not None:
+                login(request,user)
+                if DoctorModel.objects.filter(user=user).first():
+                    return redirect("doctor:panel",user.user_doctors.id)
+                
+                messages.info(request,"Siz Bir Doktor Yaratmalisiniz")
+                return redirect("doctor:create")
+        message = "Bir Seyler Sehv Oldu"
+        return render(request,"doctor_login.html",context={"message":message})
+
+
+
+
+class DoctorLogoutView(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
+    
+    def get(self,request,*args, **kwargs):
+        logout(request)
+        messages.success(request,"Ugurla Cixis Etdiniz!")
+        return redirect("/")
 
 
 
 
 def doctor_logs(request):
     return render(request,"doctor_logs.html")
-
-
-
-
-
 
 
 # def admin_register(request):

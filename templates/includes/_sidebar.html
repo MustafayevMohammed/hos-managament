@@ -128,7 +128,9 @@
               </div> {% endcomment %}
               {% if user.is_staff == False %}
                 <ul class="mt-4 pl-0">
-                  <li>Sign Out</li>
+                  <li>
+                    <a href="{% url 'doctor:logout' %}">Sign Out</a> 
+                  </li>
                 </ul>
               {% else %}
                 

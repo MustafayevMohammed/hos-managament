@@ -521,6 +521,13 @@
 
 
             <div class="row">
+              {% if messages %}
+                {% for message in messages %}
+                  <li class="{{ message.tags }}">
+                  {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                  </li>
+                {% endfor %}
+              {% endif %}
               <div class="col-12 grid-margin">
                 <div class="card">
                   <div class="card-body">
