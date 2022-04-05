@@ -126,9 +126,16 @@
               {% comment %} <div class="border-none">
                 <p class="text-black">Notification</p>
               </div> {% endcomment %}
-              <ul class="mt-4 pl-0">
-                <li>Sign Out</li>
-              </ul>
+              {% if user.is_staff == False %}
+                <ul class="mt-4 pl-0">
+                  <li>
+                    <a href="{% url 'doctor:logout' %}">Sign Out</a> 
+                  </li>
+                </ul>
+              {% else %}
+                
+              {% endif %}
+
             </div>
           </div>
         </li>

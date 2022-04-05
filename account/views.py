@@ -7,6 +7,7 @@ from todo.models import *
 from todo.forms import TaskForm
 from django.views.generic import View
 from django.contrib.auth.mixins import LoginRequiredMixin
+from account.models import CustomUserModel
 # Create your views here.
 
 
@@ -14,7 +15,10 @@ class AdminPanelView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request):
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
         if request.user.is_staff == False:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
             return redirect("doctor:panel",request.user.user_doctors.id)
 
         doctors = DoctorModel.objects.all()
