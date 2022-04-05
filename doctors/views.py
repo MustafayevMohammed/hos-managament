@@ -19,6 +19,8 @@ class DoctorPanelView(LoginRequiredMixin,View):
     
     def get(self,request,id):
         doctor = DoctorModel.objects.get(id=id)
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+
 
         active_patients = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = True)
         deactive_patients = PeopleWithPatientModel.objects.filter(doctor = doctor, is_active = False)
@@ -26,11 +28,22 @@ class DoctorPanelView(LoginRequiredMixin,View):
         last_five_ppl_with_pat = PeopleWithPatientModel.objects.filter(doctor = doctor).order_by("-id")[:5][::-1]
         last_five_operation = OperationModel.objects.filter(doctor = doctor).order_by("-id")[:5][::-1]
         
-        if request.user != doctor.user:
-            if DoctorModel.objects.filter(user = request.user).first():
+        if user_with_no_doctors:
+            return redirect("doctor:create")
+            
+        elif request.user != doctor.user:
+            if DoctorModel.objects.filter(user = request.user, user__is_accepted = True).exists():
                 return redirect("doctor:panel",request.user.user_doctors.id)
-        elif request.user.is_staff:
-            return redirect("doctor:panel",doctor.id)
+
+            elif DoctorModel.objects.filter(user = request.user, user__is_accepted = False).exists():
+                return redirect("doctor:admin_permission_waiting")
+                
+            elif doctor.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+                
+        elif request.user.is_accepted == False:
+            return redirect("doctor:admin_permission_waiting")
+
 
         context = {
             "doctor":doctor,
@@ -46,12 +59,15 @@ class DoctorListView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request):
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+
         doctors = DoctorModel.objects.all()
         active_doctors = DoctorModel.objects.filter(is_active = True)
         deactive_doctors = DoctorModel.objects.filter(is_active = False)
 
-
         if request.user.is_staff == False:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
             return redirect("doctor:panel",request.user.user_doctors.id)
         
         context = {
@@ -65,18 +81,31 @@ class DoctorListView(LoginRequiredMixin,View):
 class PatientsOfDoctorView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
-    def get(self,request,id):
-        doctor = DoctorModel.objects.get(id=id)
 
+    def get(self,request,id):
+        doctor = DoctorModel.objects.filter(id=id).first()
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+        
         patients = PeopleWithPatientModel.objects.filter(doctor = doctor)
         active_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = True)
         deactive_patients = PeopleWithPatientModel.objects.filter(doctor = doctor,is_active = False)
 
-        if request.user != doctor.user:
-            if DoctorModel.objects.filter(user = request.user).first():
+        if user_with_no_doctors:
+            return redirect("doctor:create")
+
+        elif request.user != doctor.user:
+            if DoctorModel.objects.filter(user = request.user, user__is_accepted = True).exists():
                 return redirect("doctor:panel",request.user.user_doctors.id)
-        elif request.user.is_staff:
-            return redirect("doctor:patients",doctor.id)
+
+            elif DoctorModel.objects.filter(user = request.user, user__is_accepted = False).exists():
+                return redirect("doctor:admin_permission_waiting")
+                
+            elif doctor.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+                
+        elif request.user.is_accepted == False:
+            return redirect("doctor:admin_permission_waiting")
+
 
         context = {
             "patients":patients,
@@ -92,17 +121,29 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request,id):
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+
         doctor = DoctorModel.objects.get(id=id)
 
         operations = OperationModel.objects.filter(doctor = doctor)
         active_operations = OperationModel.objects.filter(doctor = doctor,is_active = True)
         deactive_operations = OperationModel.objects.filter(doctor = doctor,is_active = False)
 
-        if request.user != doctor.user:
-            if DoctorModel.objects.filter(user = request.user).first():
+        if user_with_no_doctors:
+            return redirect("doctor:create")
+
+        elif request.user != doctor.user:
+            if DoctorModel.objects.filter(user = request.user, user__is_accepted = True).exists():
                 return redirect("doctor:panel",request.user.user_doctors.id)
-        elif request.user.is_staff:
-            return redirect("doctor:operations",doctor.id)
+
+            elif DoctorModel.objects.filter(user = request.user, user__is_accepted = False).exists():
+                return redirect("doctor:admin_permission_waiting")
+                
+            elif doctor.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+                
+        elif request.user.is_accepted == False:
+            return redirect("doctor:admin_permission_waiting")
 
         context = {
             "operations":operations,
@@ -131,13 +172,17 @@ class DoctorEditView(UpdateView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+
         doctor = DoctorModel.objects.get(id=self.kwargs.get("id"))
         
         if doctor.user != request.user:
             if DoctorModel.objects.filter(user = request.user).first():
                 return redirect("/")
-        elif request.user.is_staff:
-            return redirect("doctor:edit",doctor.id)
+        if request.user.is_staff == False:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
+            return redirect("doctor:panel",request.user.user_doctors.id)
             
         return super().dispatch(request, *args, **kwargs)
 
@@ -148,13 +193,23 @@ def admin_permission_waiting(request):
     if request.user.is_accepted == True:
         return redirect("doctor:admin_permission_accepted")
 
+    elif request.user.is_staff == True:
+        return redirect("/")
+
     return render(request,"admin_permission_waiting.html")
 
 def admin_permission_accepted(request):
+    doctor = DoctorModel.objects.filter(user = request.user).first()
     if request.user.is_accepted == False:
         return redirect("doctor:admin_permission_waiting")
+    
+    elif request.user.is_staff == True:
+        return redirect("/")
 
-    return render(request,"admin_permission_accepted.html")
+    context = {
+        "doctor":doctor,
+    }
+    return render(request,"admin_permission_accepted.html",context)
 
 
 class DoctorUserRegister(CreateView):
@@ -166,6 +221,12 @@ class DoctorUserRegister(CreateView):
         user = form.save()
         login(self.request,user)
         return redirect("doctor:admin_permission_waiting")
+
+    def dispatch(self, request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            return redirect("/")
+        return super().dispatch(request, *args, **kwargs)
+    
 
 
 class DoctorCreateView(CreateView):
@@ -189,7 +250,19 @@ class DoctorCreateView(CreateView):
         print(form.errors)
         return super().form_invalid(form)
 
+    def dispatch(self, request, *args, **kwargs):
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+        if user_with_no_doctors is None:
+            return redirect("/")
+            
+        return super().dispatch(request, *args, **kwargs)
+    
         
+
+class DoctorLoginView(View):
+
+    def get(self,request, *args, **kwargs):
+        return render(request,"doctor_login.html")
 
 
 
@@ -199,8 +272,6 @@ def doctor_logs(request):
 
 
 
-def doctor_login(request):
-    return render(request,"doctor_login.html")
 
 
 

@@ -33,7 +33,7 @@ urlpatterns = [
     path("logs/",views.doctor_logs,name = "logs"),
     path("register/",views.DoctorUserRegister.as_view(), name = "register"),
     path("create/",views.DoctorCreateView.as_view(), name = "create"),
-    path("login/",views.doctor_login, name = "login"),
+    path("login/",views.DoctorLoginView.as_view(), name = "login"),
     
     path("patients/<str:id>",views.PatientsOfDoctorView.as_view(),name="patients"),
     path("operations/<str:id>",views.OperatationsOfDoctorView.as_view(),name="operations"),
