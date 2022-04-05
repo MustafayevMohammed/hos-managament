@@ -48,7 +48,7 @@ class PatientStatusModel(models.Model):
     status = models.ForeignKey(StatusChoicesModel,max_length=22,on_delete=models.CASCADE)
     note = models.TextField(verbose_name="Xestenin cari veziyyeti haqqinda melumat:")
     date = models.DateTimeField(auto_now_add=True,verbose_name="Gun Ve Vaxt:")
-    doctor = models.ForeignKey("doctors.DoctorModel",null=True,blank=False,on_delete=models.SET_NULL)
+    doctor = models.ForeignKey("doctors.DoctorModel",null=True,blank=False,on_delete=models.CASCADE)
 
 
 
