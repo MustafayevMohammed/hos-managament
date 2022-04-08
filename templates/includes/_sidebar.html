@@ -30,7 +30,7 @@
                 <span class="font-weight-medium mb-2">{{user.user_doctors}}</span>
               {% endif %}
             </div>
-            <span class="badge badge-danger text-white ml-3 rounded">3</span>
+            <span class="badge badge-danger text-white ml-3 rounded">{{unaccepted_users.count}}</span>
           </a>
         </li>
         {% if user.user_doctors %}
