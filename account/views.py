@@ -16,10 +16,14 @@ class AdminPanelView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request):
-        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
         if request.user.is_staff == False:
             if user_with_no_doctors:
                 return redirect("doctor:create")
+
+            elif request.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+
             return redirect("doctor:panel",request.user.user_doctors.id)
 
         doctors = DoctorModel.objects.all()
@@ -69,12 +73,16 @@ class NotificationsView(LoginRequiredMixin,View):
     login_url = reverse_lazy("doctor:login")
 
     def get(self,request,*args, **kwargs):
-        user_with_no_doctors = CustomUserModel.objects.filter(id = request.user.id, user_doctors = None, is_staff = False).first()
+        user_with_no_doctors = CustomUserModel.objects.filter(id = request.user.id, user_doctors = None, is_staff = False,is_accepted = True).first()
         unaccepted_users = CustomUserModel.objects.filter(is_accepted = False)
 
         if request.user.is_staff == False:
             if user_with_no_doctors:
                 return redirect("doctor:create")
+
+            elif request.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+
             return redirect("doctor:panel",request.user.user_doctors.id)
 
         context = {
@@ -85,6 +93,12 @@ class NotificationsView(LoginRequiredMixin,View):
     def post(self,request,*args, **kwargs):
         users = request.POST.getlist("user")
         instance = CustomUserModel.objects.filter(id__in = users)
+        doctors = DoctorModel.objects.filter(user__in = instance)
+
+        for obj in doctors:
+            obj.is_active = True
+            obj.save()
+
         for obj in instance:
             obj.is_accepted = True
             obj.save()
