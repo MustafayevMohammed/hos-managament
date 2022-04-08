@@ -6,5 +6,5 @@ app_name = 'account'
 
 urlpatterns = [
     path("",views.AdminPanelView.as_view(),name="admin_panel"),
-    path("notifications/",views.notifications,name="notifications"),
+    path("notifications/",views.NotificationsView.as_view(),name="notifications"),
 ]

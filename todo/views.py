@@ -13,7 +13,7 @@ from account.models import CustomUserModel
 def completeTask(request,id):
     task = TaskModel.objects.filter(id=id).first()
     
-    user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+    user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
 
     if request.user == task.user:
         task.is_active = False
@@ -23,5 +23,9 @@ def completeTask(request,id):
         if request.user.is_staff == False:
             if user_with_no_doctors:
                 return redirect("doctor:create")
+
+            elif request.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+                
             return redirect("doctor:panel",request.user.user_doctors.id)
         

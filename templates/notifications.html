@@ -44,18 +44,21 @@
                       <div class="table-responsive">
                         <table class="table">
                           <tbody>
-                            <tr>
-                              <td>
-                                Sec
-                                <input type="checkbox" name="doctor">
-                              </td>
-                              <td>
-                                Doctor Name
-                              </td>
-                            </tr>
+                            {% for person in unaccepted_users %}
+                              <tr>
+                                <td>
+                                  Sec
+                                  <input type="checkbox" name="user" value="{{person.id}}">
+                                </td>
+                                <td>
+                                  {{person.email}}
+                                </td>
+                              </tr>
+                            {% endfor %}
                           </tbody>
                         </table>
-                        <input type="submit" name="" value="Bitir">
+                        <br>
+                        <input type="submit" name="" value="Qebul Et" class="btn btn-outline-danger btn-block">
                       </div>
                     </form>
                   </div>
