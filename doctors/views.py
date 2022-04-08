@@ -273,6 +273,8 @@ class DoctorLoginView(View):
     form_class = LoginForm
 
     def get(self,request, *args, **kwargs):
+        if not request.user.is_anonymous:
+            return redirect("/")
         return render(request,"doctor_login.html")
 
     def post(self,request,*args, **kwargs):
@@ -352,12 +354,24 @@ class ActivateDeactivateDoctorView(LoginRequiredMixin,View):
         doctor = DoctorModel.objects.get(id=kwargs.get("id"))
         user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
         doctor_user = CustomUserModel.objects.get(user_doctors=doctor)
+        doctor_operations = OperationModel.objects.filter(doctor=doctor,is_active = True)
+        patients_with_doctor = PeopleWithPatientModel.objects.filter(doctor=doctor,is_active = True)
 
 
         if request.user.is_staff == True:
             if doctor.is_active == True:
+
+                for operation in doctor_operations:
+                    operation.is_active = False
+                    operation.save()
+                    
+                for obj in patients_with_doctor:
+                    obj.is_active = False
+                    obj.save()
+
                 doctor.is_active = False
                 doctor_user.is_accepted = False
+
                 doctor_user.save()
                 doctor.save()
                 messages.success(request,"Doctor Deaktiv Edildi")

@@ -43,10 +43,11 @@
         </div>
       </li> {% endcomment %}
       {% comment %} <a href="/s"> {% endcomment %}
+        {% if user.is_staff == True %}
         <li class="nav-item dropdown d-none d-sm-flex">
           <a class="nav-link count-indicator dropdown-toggle" id="messageDropdown" href="{% url 'account:notifications' %}">
             <i class="mdi mdi-email-outline"></i>
-            <span class="count  count-varient2">5</span>
+            <span class="count  count-varient2">{{unaccepted_users.count}}</span>
           </a>
           {% comment %} <div class="dropdown-menu navbar-dropdown navbar-dropdown-large preview-list" aria-labelledby="messageDropdown">
             <h6 class="p-3 mb-0 ">Messages</h6>
@@ -74,6 +75,10 @@
             <h6 class="p-3 mb-0 ">See all activity</h6>
           </div> {% endcomment %}
         </li> 
+        {% else %}
+        
+        {% endif %}
+
       {% comment %} </a> {% endcomment %}
       
       <li class="nav-item nav-search border-0 ml-1 ml-md-3 ml-lg-5 d-none d-md-flex">

@@ -1,12 +1,11 @@
 from . models import CustomUserModel
 
 
-def get_admin_email(request):
-
+def custom_context_processor(request):
     user = request.user
-    return {"user":user}
-    # if request.user.is_superuser == True:
-    #     user = request.user
-    # else:
-    #     return {"doctor":user}
-    # return {"admin":user}
+    unaccepted_users = CustomUserModel.objects.filter(is_accepted = False)
+    return {
+        "user":user,
+        "unaccepted_users":unaccepted_users,
+    }
+

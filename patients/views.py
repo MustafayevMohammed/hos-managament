@@ -409,10 +409,20 @@ class ActivateDeactivatePatientView(LoginRequiredMixin,View):
     def get(self, request, *args, **kwargs):
         patient = PatientModel.objects.get(id=self.kwargs.get("id"))
         user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
-
+        patient_operations = OperationModel.objects.filter(patient = patient)
+        ppl_with_patient = PeopleWithPatientModel.objects.filter(patient=patient)
         
         if request.user.is_staff == True:
             if patient.is_active == True:
+
+                for operation in patient_operations:
+                    operation.is_active = False
+                    operation.save()
+
+                for obj in ppl_with_patient:
+                    obj.is_active = False
+                    obj.save()
+
                 patient.is_active = False
                 patient.save()
                 messages.success(request,"patient deaktiv edildi")
