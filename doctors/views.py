@@ -40,7 +40,7 @@ class DoctorPanelView(LoginRequiredMixin,View):
             elif DoctorModel.objects.filter(user = request.user, user__is_accepted = False).exists():
                 return redirect("doctor:admin_permission_waiting")
                 
-            elif doctor.user.is_accepted == False:
+            elif request.user.is_accepted == False:
                 return redirect("doctor:admin_permission_waiting")
                 
         elif request.user.is_accepted == False:
@@ -174,19 +174,19 @@ class DoctorEditView(UpdateView):
         return context
     
     def dispatch(self, request, *args, **kwargs):
-        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id, user_doctors = None,is_staff = False).first()
 
         doctor = DoctorModel.objects.get(id=self.kwargs.get("id"))
         
         if doctor.user != request.user:
             if DoctorModel.objects.filter(user = request.user).first():
                 return redirect("/")
-        if request.user.is_staff == False:
+        elif request.user.is_staff == False:
             if user_with_no_doctors:
                 return redirect("doctor:create")
-            return redirect("doctor:panel",request.user.user_doctors.id)
-            
         return super().dispatch(request, *args, **kwargs)
+
+            
 
     
     
@@ -331,6 +331,37 @@ class DoctorLogs(View):
             "doctor_notes":doctor_notes,
         }
         return render(request,"doctor_logs.html",context)
+
+
+class ActivateDeactivateDoctorView(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
+
+    def get(self,request,*args, **kwargs):
+        doctor = DoctorModel.objects.get(id=kwargs.get("id"))
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False).first()
+        doctor_user = CustomUserModel.objects.get(user_doctors=doctor)
+
+
+        if request.user.is_staff == True:
+            if doctor.is_active == True:
+                doctor.is_active = False
+                doctor_user.is_accepted = False
+                doctor_user.save()
+                doctor.save()
+                messages.success(request,"Doctor Deaktiv Edildi")
+                return redirect("doctor:panel",doctor.id)
+            else:
+                doctor.is_active = True
+                doctor.user__is_accepted = True
+                doctor_user.is_accepted = True
+                doctor_user.save()
+                doctor.save()
+                messages.success(request,"Doctor Aktiv Edildi")
+                return redirect("doctor:panel",doctor.id)
+        else:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
+            return redirect("doctor:panel",request.user.user_doctors.id)
 
 
 # def admin_register(request):

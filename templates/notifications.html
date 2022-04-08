@@ -32,64 +32,32 @@
               <h3 class="mb-0"> 
                 Gelen Doktor Istekleri
               </h3>
-              <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ml-3 btn-success"> Add Operation </button>
-              </div>
             </div>
 
             <div class="row" style="justify-content: center ;">
               <div class="col-lg-9 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Basic Table</h4>
-                    <p class="card-description"> Add class <code>.table</code>
-                    </p>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>Email</th>
-                            <th>Status</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>12 May 2017</td>
-                            <td>
-                              <a class="badge badge-success">Qebul Et</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Messsy</td>
-                            <td>
-                              <a class="badge badge-success">Qebul Et</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>John</td>
-                            <td>
-                              <a class="badge badge-success">Qebul Et</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Peter</td>
-                            <td>
-                              <a class="badge badge-success">Qebul Et</a>
-                            </td>
-                          </tr>
-                          <tr>
-                            <td>Dave</td>
-                            <td>
-                              <a class="badge badge-success">Qebul Et</a>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <h4 class="card-title">Doctorlar</h4>
+                    <form action="" method="post" >
+                      {% csrf_token %}
+                      <div class="table-responsive">
+                        <table class="table">
+                          <tbody>
+                            <tr>
+                              <td>
+                                Sec
+                                <input type="checkbox" name="doctor">
+                              </td>
+                              <td>
+                                Doctor Name
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                        <input type="submit" name="" value="Bitir">
+                      </div>
+                    </form>
                   </div>
                 </div>
               </div>

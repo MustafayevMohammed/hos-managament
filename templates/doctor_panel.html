@@ -51,14 +51,28 @@
                       <h6 class="dropdown-header">Settings</h6>
                       <a class="dropdown-item" href="{% url 'doctor:edit' doctor.id %}">Doctor Edit</a>
                       {% if user.is_staff == True %}
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Doktor'u Deaktiv Etmek</a>  
+                        {% if doctor.is_active == False %}
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="{% url 'doctor:activate_deactivate' doctor.id %}">Doktor'u Aktiv Etmek</a>  
+                        {% else %}
+                          <div class="dropdown-divider"></div>
+                          <a class="dropdown-item" href="{% url 'doctor:activate_deactivate' doctor.id %}">Doktor'u Deaktiv Etmek</a>  
+                        {% endif %}
+
                       {% else %}
+                      
                       {% endif %}
                     </div>
                   </div>              
                 </div>
             </div>
+            {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <li  {% if message.tags %} class=" alert alert-{{ message.tags }} " {% endif %}> {{ message }} </li>
+                {% endfor %}
+            </ul>
+          {% endif %}
             <div class="d-flex row">
               <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
                 <div class="row stats">
