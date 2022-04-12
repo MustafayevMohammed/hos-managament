@@ -2,9 +2,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from account.models import CustomUserModel
-from disease.models import OperationModel
+from disease.models import DiseaseModel, OperationModel
 from django.contrib.auth.mixins import LoginRequiredMixin
 from doctors.models import DoctorModel
+from django.views.generic import CreateView
+from disease.forms import CreateOperationForm
+from patients.models import PatientModel, PeopleWithPatientModel
 # Create your views here.
 
 class OperationListView(LoginRequiredMixin,View):
@@ -66,5 +69,42 @@ class OperationPanelView(LoginRequiredMixin,View):
         }
         return render(request,"operation_detail.html",context)
 
-def create_operation(request):
-    return render(request,"create_operation.html")
+class OperationCreateView(LoginRequiredMixin,CreateView):
+    template_name = "create_operation.html"
+    form_class = CreateOperationForm
+    login_url = reverse_lazy("doctor:login")
+
+    def get_context_data(self,*args, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["diseases"] = DiseaseModel.objects.all()
+        context["doctors"] = DoctorModel.objects.all()
+        context["patients"] = PatientModel.objects.filter(is_active = True)
+        return context
+    
+    
+    def form_valid(self,form,*args, **kwargs):
+        name = form.cleaned_data.get("name")
+        patient = form.cleaned_data.get("patient")
+        description = form.cleaned_data.get("description")
+
+        form_diseases = form.cleaned_data.get("disease")
+        form_doctors = form.cleaned_data.get("doctor")
+
+        diseases = DiseaseModel.objects.filter(id__in = form_diseases)
+        doctors = DoctorModel.objects.filter(id__in = form_doctors)
+        unactive_ppl_with_patient = PeopleWithPatientModel.objects.filter(patient = patient, doctor__in = doctors,is_active = False)
+
+        ppl_with_not_patient = DoctorModel.objects.exclude(
+            doctor_ppl_with_patient__patient = patient,
+        )
+
+        if unactive_ppl_with_patient.exists():
+            unactive_ppl_with_patient.update(is_active = True)
+            
+        instance = OperationModel.objects.create(name = name, patient = patient, description = description)
+        instance.disease.add(*diseases)
+        instance.doctor.add(*doctors)
+        for doctor in ppl_with_not_patient:
+            obj = PeopleWithPatientModel.objects.create(patient = patient, is_active = True)
+            obj.doctor.add(doctor)
+        return redirect("disease:panel",instance.id)

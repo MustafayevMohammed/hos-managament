@@ -33,13 +33,7 @@
             <div class="page-header flex-wrap">
               <h3 class="mb-0"> Operation Create <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block"> Yeni Emeliyyat Yaratmaq Formu</span>
               </h3>
-              <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ml-3 btn-success"> Add User </button>
-              </div>
+
             </div>
             {% comment %} <div class="d-flex row">
               <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
@@ -572,24 +566,22 @@
                           <label class="col-sm-6 col-form-label">Disease(s)</label>
                           <div class="form-group row">
                             <div class="col-sm-12">
-                              <select class="form-control multiple-select" name="disease[]" multiple="multiple">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              <select class="form-control multiple-select" name="disease" multiple="multiple">
+                                {% for disease in diseases %}
+                                  <option value="{{disease.id}}"> {{disease.name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
-                          </div>
+                          </div> 
                         </div>
                         <div class="col-md-6">
                           <label class="col-sm-6 col-form-label">Doctor(s)</label>
                           <div class="form-group row">
                             <div class="col-sm-12">
-                              <select class="form-control multiple-select" name="doctor[]" multiple="multiple">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              <select class="form-control multiple-select" name="doctor" multiple="multiple">
+                                {% for doctor in doctors %}
+                                  <option value="{{doctor.id}}"> {{doctor.get_full_name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
@@ -600,11 +592,10 @@
                           <label class="col-sm-6 col-form-label">Patient</label>
                           <div class="form-group row">
                             <div class="col-sm-12">
-                              <select class="form-control single-select" name="patient[]">
-                                <option>Category1</option>
-                                <option>Category2</option>
-                                <option>Category3</option>
-                                <option>Category4</option>
+                              <select class="form-control single-select" name="patient">
+                                {% for patient in patients %}
+                                  <option value="{{patient.id}}"> {{patient.get_full_name}} </option>
+                                {% endfor %}
                               </select>
                             </div>
                           </div>
