@@ -1,7 +1,7 @@
 from django import forms
 from disease.models import OperationModel
 
-class CreateOperationForm(forms.Form):
+class CreateOperationForm(forms.ModelForm):
 
     class Meta:
         model = OperationModel

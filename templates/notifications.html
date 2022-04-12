@@ -39,28 +39,33 @@
                 <div class="card">
                   <div class="card-body">
                     <h4 class="card-title">Doctorlar</h4>
-                    <form action="" method="post" >
-                      {% csrf_token %}
-                      <div class="table-responsive">
-                        <table class="table">
-                          <tbody>
-                            {% for person in unaccepted_users %}
-                              <tr>
-                                <td>
-                                  Sec
-                                  <input type="checkbox" name="user" value="{{person.id}}">
-                                </td>
-                                <td>
-                                  {{person.email}}
-                                </td>
-                              </tr>
-                            {% endfor %}
-                          </tbody>
-                        </table>
-                        <br>
-                        <input type="submit" name="" value="Qebul Et" class="btn btn-outline-danger btn-block">
-                      </div>
-                    </form>
+                    {% if unaccepted_users %}
+                      <form action="" method="post" >
+                        {% csrf_token %}
+                        <div class="table-responsive">
+                          <table class="table">
+                            <tbody>
+                              {% for person in unaccepted_users %}
+                                <tr>
+                                  <td>
+                                    Sec
+                                    <input type="checkbox" name="user" value="{{person.id}}">
+                                  </td>
+                                  <td>
+                                    {{person.email}}
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+                          <br>
+                          <input type="submit" name="" value="Qebul Et" class="btn btn-outline-danger btn-block">
+                        </div>
+                      </form>
+                    {% else %}
+                      <div class="alert alert-danger">Hec Bir Doktor Isteyi Yoxdur</div>
+                    {% endif %}
+
                   </div>
                 </div>
               </div>
