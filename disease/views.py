@@ -8,6 +8,7 @@ from doctors.models import DoctorModel
 from django.views.generic import CreateView
 from disease.forms import CreateOperationForm
 from patients.models import PatientModel, PeopleWithPatientModel
+
 # Create your views here.
 
 class OperationListView(LoginRequiredMixin,View):
@@ -108,3 +109,32 @@ class OperationCreateView(LoginRequiredMixin,CreateView):
             obj = PeopleWithPatientModel.objects.create(patient = patient, is_active = True)
             obj.doctor.add(doctor)
         return redirect("disease:panel",instance.id)
+
+
+class ActivateDeactivateOperation(View):
+
+    def get(self,request,*args, **kwargs):
+        operation = OperationModel.objects.get(id = kwargs.get("id"))
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
+
+
+        if request.user.is_staff == True:
+            if operation.is_active == True:
+                operation.is_active = False
+                operation.save()
+                
+                return redirect("disease:panel",operation.id)
+            
+            else:
+                operation.is_active = True
+                operation.save()
+                return redirect("disease:panel",operation.id)
+        else:
+            if user_with_no_doctors.exists():
+                return redirect("doctor:create")
+
+            elif request.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+
+            return redirect("doctor:panel",request.user.user_doctors.id)
+            

@@ -28,15 +28,36 @@
         <div class="main-panel">
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
-              <h3 class="mb-0"> Emeliyyat Detali <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">Your web analytics dashboard template.</span>
+              <h3 class="mb-0"> Emeliyyat Detali <span class="pl-0 h6 pl-sm-2 text-muted d-inline-block">
+                {% if operation.is_active == True %}
+                  <div class="alert alert-success">Emeliyyat Aktivdir</div>
+                {% else %}
+                  <div class="alert alert-danger">Emeliyyat Aktiv Deyil</div>
+                {% endif %}
+              </span>
               </h3>
               <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
+
+                  <div class="dropdown">
+                    <button type="button" class="btn btn-success dropdown-toggle" id="dropdownMenuIconButton7" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      <i class="mdi mdi-settings"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuIconButton9" style="">
+                      <h6 class="dropdown-header">Emeliyyat Ayarlari</h6>
+                      <div class="dropdown-divider"></div>
+                      {% comment %} <a class="dropdown-item" href="">Patient'in Ayarlari</a> {% endcomment %}
+                      {% comment %} <a class="dropdown-item" href="#">Patient'in yanindaki insanlar</a> {% endcomment %}
+                      {% if operation.is_active == True %}
+                        <a href="{% url 'disease:activate_deactivate' operation.id %}" class="dropdown-item" href="#">Emeliyyati Deaktiv Etmek</a>
+                      {% else %}
+                        <a href="{% url 'disease:activate_deactivate' operation.id %}" class="dropdown-item" href="#">Emeliyyati Aktiv Etmek</a>
+                      {% endif %}
+
+                    </div>
+                  </div> 
                 {% comment %} <button type="button" class="btn btn-sm ml-3 btn-success"> Add User </button> {% endcomment %}
               </div>
+              
             </div>
             <div class="d-flex row">
               <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
