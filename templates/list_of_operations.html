@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Doctor Login</title>
+    <title>Emeliyyatlarin List'i</title>
     <link rel="stylesheet" href="{% static 'vendors/mdi/css/materialdesignicons.min.css' %}" />
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <link rel="stylesheet" href="{% static 'vendors/flag-icon-css/css/flag-icon.min.css' %}" />
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" />
     {% include "includes/header_plugins.html" %}
+
 
   </head>
   <body>
@@ -29,463 +30,62 @@
           <div class="content-wrapper pb-0">
             <div class="page-header flex-wrap">
               <h3 class="mb-0"> 
-                Doctor Login
+                Emeliyyatlari Deaktiv Etmek
               </h3>
-              {% comment %} <div class="d-flex">
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border">
-                  <i class="mdi mdi-email btn-icon-prepend"></i> Email </button>
-                <button type="button" class="btn btn-sm bg-white btn-icon-text border ml-3">
-                  <i class="mdi mdi-printer btn-icon-prepend"></i> Print </button>
-                <button type="button" class="btn btn-sm ml-3 btn-success"> Add User </button>
-              </div> {% endcomment %}
+
             </div>
-            {% comment %} <div class="d-flex row">
-              <div class="col-xl-12 col-md-12 stretch-card grid-margin grid-margin-sm-0 pb-sm-0">
-                <div class="row stats">
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-warning">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Doktor'larin sayisi</p>
-                            <h2 class="text-white"> $8,753.<span class="h5">00</span>
-                            </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-warning"></i>
-                        </div>
-                        <h6 class="text-white">18.33% Since last month</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-danger">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Patient'lerin Sayisi</p>
-                            <h2 class="text-white"> $5,300.<span class="h5">00</span>
-                            </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-multiple bg-inverse-icon-danger"></i>
-                        </div>
-                        <h6 class="text-white">13.21% Since last month</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-4 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-primary">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Aktiv Olan Emeliyyatlarin Sayisi</p>
-                            <h2 class="text-white"> $1,753.<span class="h5">00</span>
-                            </h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-briefcase-outline bg-inverse-icon-primary"></i>
-                        </div>
-                        <h6 class="text-white">67.98% Since last month</h6>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-xl-3 col-md-6 stretch-card grid-margin grid-margin-sm-0 pb-sm-3">
-                    <div class="card bg-success">
-                      <div class="card-body px-3 py-4">
-                        <div class="d-flex justify-content-between align-items-start">
-                          <div class="color-card">
-                            <p class="mb-0 color-card-head">Affiliate</p>
-                            <h2 class="text-white">2368</h2>
-                          </div>
-                          <i class="card-icon-indicator mdi mdi-account-circle bg-inverse-icon-success"></i>
-                        </div>
-                        <h6 class="text-white">20.32% Since last month</h6>
-                      </div>
-                    </div>
-                  </div> 
-                </div>
-              </div>
-              <div class="col-xl-9 stretch-card grid-margin">
+            {% if messages %}
+              <ul class="messages">
+                  {% for message in messages %}
+                  <li  {% if message.tags %} class=" alert alert-{{ message.tags }} " {% endif %}> {{ message }} </li>
+                  {% endfor %}
+              </ul>
+            {% endif %}
+            <div class="row" style="justify-content: center ;">
+              <div class="col-lg-9 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <div class="row">
-                      <div class="col-sm-7">
-                        <h5>Business Survey</h5>
-                        <p class="text-muted"> Show overview jan 2018 - Dec 2019 <a class="text-muted font-weight-medium pl-2" href="#"><u>See Details</u></a>
-                        </p>
-                      </div>
-                      <div class="col-sm-5 text-md-right">
-                        <button type="button" class="btn btn-icon-text mb-3 mb-sm-0 btn-inverse-primary font-weight-normal">
-                          <i class="mdi mdi-email btn-icon-prepend"></i>Download Report </button>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-4">
-                        <div class="card mb-3 mb-sm-0">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Today Earnings</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$5,300</h3>
-                                <p class="text-success m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="earningChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="card mb-3 mb-sm-0">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Product Sold</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$9,100</h3>
-                                <p class="text-danger m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="productChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-sm-4">
-                        <div class="card">
-                          <div class="card-body py-3 px-4">
-                            <p class="m-0 survey-head">Today Orders</p>
-                            <div class="d-flex justify-content-between align-items-end flot-bar-wrapper">
-                              <div>
-                                <h3 class="m-0 survey-value">$4,354</h3>
-                                <p class="text-success m-0">-310 avg. sales</p>
-                              </div>
-                              <div id="orderChart" class="flot-chart"></div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row my-3">
-                      <div class="col-sm-12">
-                        <div class="flot-chart-wrapper">
-                          <div id="flotChart" class="flot-chart">
-                            <canvas class="flot-base"></canvas>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-sm-8">
-                        <p class="text-muted mb-0"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore. <b>Learn More</b>
-                        </p>
-                      </div>
-                      <div class="col-sm-4">
-                        <p class="mb-0 text-muted">Sales Revenue</p>
-                        <h5 class="d-inline-block survey-value mb-0"> $2,45,500 </h5>
-                        <p class="d-inline-block text-danger mb-0"> last 8 months </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div> 
+                    <h4 class="card-title">Aktiv Emeliyyatlar </h4>
+                    {% if operations %}
+                      <div class="table-responsive">
+                        <form action="" method="post">
+                          {% csrf_token %}
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Secmek</th>
+                                <th>Emeliyyat Ad'i</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                                {% for operation in operations %}
+                                  <tr>
+                                    <td>
+                                      <input type="checkbox" value="{{ operation.id }}" name="operation">
+                                    </td>
+                                    <td>
+                                      {{operation.name}}
+                                    </td>
+                                  </tr>
+                                {% endfor %}
+                            </tbody>
+                          </form>
 
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Son Xesteler</h4>
-                    <p class="card-description"> Add class <code>.table-striped</code>
-                    </p>
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <thead>
-                          <tr>
-                            <th>User</th>
-                            <th>First name</th>
-                            <th>Last Name</th>
-                            <th>Amount</th>
-                            <th>Deadline</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Herman Beck</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>Messsy Adam</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$245.30</td>
-                            <td>July 1, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>John Richards</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$138.00</td>
-                            <td>Apr 12, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-4.png" alt="image" />
-                            </td>
-                            <td>Peter Meggik</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Edward</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 160.25</td>
-                            <td>May 03, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>John Doe</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 123.21</td>
-                            <td>April 05, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>Henry Tom</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 150.00</td>
-                            <td>June 16, 2015</td>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
-                              <td>
-                                Mustafazade
-                              </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                            <tr>
-                              <td class="py-1">
-                                <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                              </td>
-                              <td>Henry Tom</td>
-                              <td>
-                                  Mustafazade
-                              </td>
-                              <td>$ 150.00</td>
-                              <td>June 16, 2015</td>
-                            </tr>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> {% endcomment %}
+                          </table>
+                        <br>
+                        <input type="submit" value="Bitir" class="btn btn-outline-danger btn-block">
+                      </div>
+                    {% else %}
+                      <div class="alert alert-danger">Hec Bir Aktiv Emeliyyat Yoxdur</div>
+                    {% endif %}
 
-            {% comment %} <div class="row">
-              <div class="col-xl-12 col-sm-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body px-0 overflow-auto">
-                    <h4 class="card-title pl-4">Son 5 Emeliyyat</h4>
-                    <div class="table-responsive">
-                      <table class="table">
-                        <thead>
-                          <tr>
-                            <th>Patient</th>
-                            <th>Name</th>
-                            <th>Disease</th>
-                            <th>Doctor(s)</th>
-                            <th>Started Date</th>
-                            <th>Finished Date</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="assets/images/faces/face1.jpg" alt="image" />
-                                <div class="table-user-name ml-3">
-                                  <p class="mb-0 font-weight-medium"> Cecelia Cooper </p>
-                                  <small> Payment on hold</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td>Angular Admin</td>
-                            <td>
-                              <div class="badge badge-inverse-success"> Completed </div>
-                            </td>
-                            <td>$ 77.99</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="assets/images/faces/face10.jpg" alt="image" />
-                                <div class="table-user-name ml-3">
-                                  <p class="mb-0 font-weight-medium"> Victor Watkins </p>
-                                  <small>Email verified</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td>Angular Admin</td>
-                            <td>
-                              <div class="badge badge-inverse-success"> Completed </div>
-                            </td>
-                            <td>$245.30</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="assets/images/faces/face11.jpg" alt="image" />
-                                <div class="table-user-name ml-3">
-                                  <p class="mb-0 font-weight-medium"> Ada Burgess </p>
-                                  <small>Email verified</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td>One page html</td>
-                            <td>
-                              <div class="badge badge-inverse-danger"> Completed </div>
-                            </td>
-                            <td>$ 160.25</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="assets/images/faces/face13.jpg" alt="image" />
-                                <div class="table-user-name ml-3">
-                                  <p class="mb-0 font-weight-medium"> Dollie Lynch </p>
-                                  <small>Email verified</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td>Wordpress</td>
-                            <td>
-                              <div class="badge badge-inverse-success"> Declined </div>
-                            </td>
-                            <td>$ 123.21</td>
-                          </tr>
-                          <tr>
-                            <td>
-                              <div class="d-flex align-items-center">
-                                <img src="assets/images/faces/face16.jpg" alt="image" />
-                                <div class="table-user-name ml-3">
-                                  <p class="mb-0 font-weight-medium"> Harry Holloway </p>
-                                  <small>Payment on process</small>
-                                </div>
-                              </div>
-                            </td>
-                            <td>VueJs Application</td>
-                            <td>
-                              <div class="badge badge-inverse-danger"> Declined </div>
-                            </td>
-                            <td>$ 150.00</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                    <a class="text-black mt-3 d-block pl-4" href="#">
-                      <span class="font-weight-medium h6">View all order history</span>
-                      <i class="mdi mdi-chevron-right"></i></a>
+
                   </div>
                 </div>
               </div>
-              <div class="col-lg-12 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Son 4 Hekim</h4>
-                    <p class="card-description"> Add class <code>.table-striped</code>
-                    </p>
-                    <div class="table-responsive">
-                      <table class="table table-striped">
-                        <thead class="bg-light">
-                          <tr>
-                            <th>First name</th>
-                            <th>Last Name</th>
-                            <th>Working Field</th>
-                            <th>Phone Number</th>
-                            <th>Blood Type</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-1.png" alt="image" />
-                            </td>
-                            <td>Herman Beck</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-2.png" alt="image" />
-                            </td>
-                            <td>Messsy Adam</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$245.30</td>
-                            <td>July 1, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-3.png" alt="image" />
-                            </td>
-                            <td>John Richards</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$138.00</td>
-                            <td>Apr 12, 2015</td>
-                          </tr>
-                          <tr>
-                            <td class="py-1">
-                              <img src="../../assets/images/faces-clipart/pic-4.png" alt="image" />
-                            </td>
-                            <td>Peter Meggik</td>
-                            <td>
-                              Mustafazade
-                            </td>
-                            <td>$ 77.99</td>
-                            <td>May 15, 2015</td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
+
+
+              {% comment %} <div class="col-xl-4 col-sm-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
                     <div class="card-title font-weight-medium"> Business Survey </div>
@@ -517,57 +117,53 @@
                     <a class="text-black mt-3 d-block font-weight-medium h6" href="#">View all <i class="mdi mdi-chevron-right"></i></a>
                   </div>
                 </div>
-              </div> 
-            </div> {% endcomment %}
-
-
-
-            <div class="row" >
-              
-              {% if message %}
-                <div class="alert alert-danger">{{message}}</div>
-              {% else %}
-              
-              {% endif %}
-              <div class="col-md-12 grid-margin stretch-card">
+              </div> {% endcomment %}
+            </div>
+            <div class="row">
+              {% comment %} <div class="col-xl-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Login</h4>
-                    <br>
-                    {% comment %} <p class="card-description">Bu Form'u Doldurduqdan Sonra Eyer Admin Sizi Qebul Etse Qeydiyyat'in Bir Sonraki Merhelesine Kececeksiniz</p> {% endcomment %}
-                    <form class="forms-sample" method="post" action="">
-                      {% csrf_token %}
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email address</label>
-                        {% if form.email.errors %}
-                          <div class="error alert alert-danger">
-                            {{form.email.errors}}
+                    <h4 class="card-title text-black">To do Task List</h4>
+                    <p class="text-muted">Created by anonymous</p>
+                    <div class="list-wrapper">
+                      <ul class="d-flex flex-column-reverse todo-list todo-list-custom">
+                        <li>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="checkbox" type="checkbox" /> Meeting with Alisa </label>
+                            <span class="list-time">4 Hours Ago</span>
                           </div>
-                        {% else %}
-                        {% endif %}
-                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email" name="email" />
-                      </div>
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        {% if form.password.errors %}
-                          <div class="error alert alert-danger">
-                            {{form.password.errors}}
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="checkbox" type="checkbox" /> Create invoice </label>
+                            <span class="list-time">6 Hours Ago</span>
                           </div>
-                        {% else %}
-                        {% endif %}
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" name="password"/>
-                      </div>
-
-                      {% comment %} <div class="form-check form-check-flat form-check-primary">
-                        <label class="form-check-label">
-                          <input type="checkbox" class="form-check-input" /> Remember me </label>
-                      </div> {% endcomment %}
-                      <button type="submit" class="btn btn-primary mr-2"> Submit </button>
-                      <a href="{% url 'doctor:register' %}"> Hesabiniz Yoxdur?</a>
-                    </form>
+                        </li>
+                        <li class="completed">
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="checkbox" type="checkbox" checked /> Prepare for presentation </label>
+                            <span class="list-time">2 Hours Ago</span>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="form-check">
+                            <label class="form-check-label">
+                              <input class="checkbox" type="checkbox" /> Pick up kids from school </label>
+                            <span class="list-time">8 Hours Ago</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="add-items d-flex flex-wrap flex-sm-nowrap">
+                      <input type="text" class="form-control todo-list-input flex-grow" placeholder="Add task name" />
+                      <button class="add btn btn-primary font-weight-regular text-nowrap" id="add-task"> Add Task </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </div> {% endcomment %}
               <div class="col-xl-12 col-md-6 grid-margin stretch-card">
                 <!--datepicker-->
                 <div class="card">
@@ -1035,17 +631,7 @@
     <!-- plugins:js -->
     {% include "includes/plugins.html" %}
 
-    
     <script src="{% static 'vendors/bootstrap-datepicker/bootstrap-datepicker.min.js' %}"></script>
-    <script>
-      $(document).ready(function() {
-        $('.multiple-select').select2();
-      });
-      $('#multiple-select').on('select2:opening select2:closing', function( event ) {
-        var $searchfield = $(this).parent().find('.select2-search__field');
-        $searchfield.prop('disabled', true);
-      });
-    </script>
-
+    <!-- End custom js for this page -->
   </body>
 </html>
