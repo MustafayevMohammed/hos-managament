@@ -111,7 +111,8 @@ class OperationCreateView(LoginRequiredMixin,CreateView):
         return redirect("disease:panel",instance.id)
 
 
-class ActivateDeactivateOperation(View):
+class ActivateDeactivateOperation(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
 
     def get(self,request,*args, **kwargs):
         operation = OperationModel.objects.get(id = kwargs.get("id"))

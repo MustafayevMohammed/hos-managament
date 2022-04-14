@@ -136,9 +136,11 @@ class PatientCreateView(LoginRequiredMixin,CreateView):
         return super().dispatch(request,*args, **kwargs)
 
 
-class PatientEditView(UpdateView):
+class PatientEditView(LoginRequiredMixin,UpdateView):
     template_name = "patient_edit.html"
     form_class = CreatePatientForm
+    login_url = reverse_lazy("doctor:login")
+
     # permission_required = "patientmodel.change_patientmodel"
     
 
@@ -159,6 +161,7 @@ class PatientEditView(UpdateView):
     
 
     def dispatch(self,request,*args, **kwargs):
+
         user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
         if request.user.is_staff == False:
             if user_with_no_doctors:
@@ -440,3 +443,4 @@ class ActivateDeactivatePatientView(LoginRequiredMixin,View):
                 return redirect("doctor:admin_permission_waiting")
 
             return redirect("doctor:panel",request.user.user_doctors.id)
+

@@ -12,6 +12,7 @@ from doctors.forms import DoctorForm
 from account.forms import RegisterForm, LoginForm
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -162,9 +163,10 @@ class OperatationsOfDoctorView(LoginRequiredMixin,View):
 
 
 
-class DoctorEditView(UpdateView):
+class DoctorEditView(LoginRequiredMixin,UpdateView):
     template_name = "doctor_edit.html"
     form_class = DoctorForm
+    login_url = reverse_lazy("doctor:login")
 
     def get_object(self,*args, **kwargs):
         return DoctorModel.objects.get(id=self.kwargs.get("id"))
@@ -307,7 +309,9 @@ class DoctorLogoutView(LoginRequiredMixin,View):
 
 
 
-class DoctorLogs(View):
+class DoctorLogs(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
+
 
     def get(self,request,*args, **kwargs):
         doctor = DoctorModel.objects.get(id=kwargs.get("id"))
