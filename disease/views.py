@@ -8,7 +8,7 @@ from doctors.models import DoctorModel
 from django.views.generic import CreateView
 from disease.forms import CreateOperationForm
 from patients.models import PatientModel, PeopleWithPatientModel
-
+from django.contrib import messages
 # Create your views here.
 
 class OperationListView(LoginRequiredMixin,View):
@@ -111,7 +111,8 @@ class OperationCreateView(LoginRequiredMixin,CreateView):
         return redirect("disease:panel",instance.id)
 
 
-class ActivateDeactivateOperation(View):
+class ActivateDeactivateOperation(LoginRequiredMixin,View):
+    login_url = reverse_lazy("doctor:login")
 
     def get(self,request,*args, **kwargs):
         operation = OperationModel.objects.get(id = kwargs.get("id"))
@@ -138,3 +139,37 @@ class ActivateDeactivateOperation(View):
 
             return redirect("doctor:panel",request.user.user_doctors.id)
             
+
+class ActiveOperationsListView(LoginRequiredMixin,View):
+
+    login_url = reverse_lazy("doctor:login")
+
+    def get(self,request,*args, **kwargs):
+
+        user_with_no_doctors = CustomUserModel.objects.filter(id=request.user.id,user_doctors = None,is_staff = False,is_accepted = True).first()
+        operations = OperationModel.objects.filter(is_active = True)
+
+        if request.user.is_staff == False:
+            if user_with_no_doctors:
+                return redirect("doctor:create")
+            
+            if request.user.is_accepted == False:
+                return redirect("doctor:admin_permission_waiting")
+            
+            return redirect("doctor:panel",request.user.user_doctors.id)
+        
+        context = {
+            "operations":operations,
+        }
+        return render(request,"list_of_operations.html",context)
+
+
+    def post(self,request,*args, **kwargs):
+        form_operations = self.request.POST.getlist("operation")
+        instance = OperationModel.objects.filter(id__in = form_operations)
+
+        for obj in instance:
+            obj.is_active = False
+            obj.save()
+        messages.success(request,"Emeliyyatlar Ugurla Deaktiv Oldu!")
+        return redirect("disease:active_operations")
