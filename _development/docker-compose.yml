@@ -5,6 +5,7 @@ services:
     build: ../
     volumes:
       - ../:/app
+      # - ../data:/vol/web
     ports:
       - 8000:8000
     image: app:django

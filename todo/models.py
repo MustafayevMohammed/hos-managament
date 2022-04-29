@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.forms import FileField
 # Create your models here.
 
 
@@ -8,6 +9,7 @@ class TaskModel(models.Model):
     name = models.CharField(max_length=70,verbose_name="Basliq:")
     created_date = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField(default=True)
+    image = FileField()
 
     def __str__(self):
         return self.name
