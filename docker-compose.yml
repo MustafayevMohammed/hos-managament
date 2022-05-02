@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: ../
+    build: ./django
     volumes:
-      - ../:/app
+      - ./django:/app
       # - statvol:/vol/web/static
     ports:
       - 8000:8000
@@ -23,7 +23,7 @@ services:
       - 5432:5432
     container_name: pgdb
     env_file:
-      - ../.env
+      - ./django/.env
       
 volumes:
   dbvolume:
