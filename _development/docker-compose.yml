@@ -5,6 +5,7 @@ services:
     build: ../
     volumes:
       - ../:/app
+      - statvol:/vol/web/static
     ports:
       - 8000:8000
     image: app:django
@@ -26,3 +27,4 @@ services:
       
 volumes:
   dbvolume:
+  statvol:

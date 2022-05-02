@@ -6,5 +6,11 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install --upgrade pip
 RUN apk add python3-dev libffi-dev libressl-dev libuv-dev build-base
-# RUN pip3 install libffi-dev
 RUN pip3 install -r requirements.txt
+RUN adduser --disabled-password --no-create-home app
+RUN mkdir -p /vol/web/static
+RUN mkdir -p /vol/web/media
+RUN chown -R app:app /vol
+RUN chmod -R 755 /vol
+
+USER app
