@@ -3,6 +3,9 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 
+class TestModel(models.Model):
+    attachment = models.FileField()
+
 class TaskModel(models.Model):
     user = models.ForeignKey("account.CustomUserModel",on_delete=models.CASCADE,related_name="user_task")
     name = models.CharField(max_length=70,verbose_name="Basliq:")

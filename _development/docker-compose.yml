@@ -5,7 +5,7 @@ services:
     build: ../
     volumes:
       - ../:/app
-      - statvol:/vol/web/static
+      # - statvol:/vol/web/static
     ports:
       - 8000:8000
     image: app:django
@@ -20,11 +20,11 @@ services:
     volumes:
       - dbvolume:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - 5432:5432
     container_name: pgdb
     env_file:
       - ../.env
       
 volumes:
   dbvolume:
-  statvol:
+  # statvol:
