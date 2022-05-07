@@ -10,9 +10,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+
+
+
 from pathlib import Path
 import os
 import environ
+import dj_database_url
 
 env = environ.Env()
 environ.Env.read_env()
@@ -105,6 +109,13 @@ DATABASES = {
     }
 }
 
+"""
+Heroku database settings. Uncomment when you want to use it.
+"""
+
+db_from_env = dj_database_url.config()
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['CONN_MAX_AGE'] = 500
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

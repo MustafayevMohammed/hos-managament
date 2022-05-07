@@ -40,5 +40,6 @@ urllib3==1.26.7
 vine==5.0.0
 virtualenv==20.8.0
 wcwidth==0.2.5
+dj-database-url
 
 uWSGI>=2.0.20,<2.1
