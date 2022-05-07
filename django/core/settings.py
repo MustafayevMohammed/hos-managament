@@ -168,7 +168,7 @@ MEDIA_URL = "/media/"
 # MEDIA_ROOT = "/vol/web/media"
 
 STATIC_ROOT = "/static/"
-# MEDIA_ROOT = "/opt/services/app/media/"
+MEDIA_ROOT = "/media/"
 print(STATIC_ROOT)
 # print(MEDIA_ROOT)
 

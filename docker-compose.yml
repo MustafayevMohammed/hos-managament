@@ -20,6 +20,7 @@ services:
     volumes:
       - ./django:/app
       - static:/static 
+      - media:/media 
       # - mediavol1:/opt/services/app/media
       # - statvol:/vol/web/static
     ports:
@@ -53,6 +54,7 @@ services:
     build: ./config
     volumes:
       - static:/static
+      - media:/media
     ports:
       - 80:80
     depends_on:
@@ -65,6 +67,7 @@ services:
 volumes:
   dbvolume:
   static:
+  media:
   # mediavol1:
 
 networks:
