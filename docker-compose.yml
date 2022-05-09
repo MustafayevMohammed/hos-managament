@@ -15,7 +15,7 @@ services:
     networks:
       djangonetwork:
 
-  app:
+  web:
     build: .
     volumes:
       # - .:/app
@@ -25,9 +25,9 @@ services:
       # - statvol:/vol/web/static
     ports:
       - "8000:8000"
-    image: app:django
+    image: web:django
     container_name: django_app
-    command: gunicorn core.wsgi:application --bind 0.0.0.0:8000
+    command: gunicorn core.wsgi:application workers 4 --bind 0.0.0.0:$PORT
     depends_on:
       - db
     networks:
@@ -58,12 +58,21 @@ services:
     ports:
       - 80:80
     depends_on:
-      - app
+      - web
     networks:
       main:
         aliases:
           - nginx
-
+  # worker:
+  #   build: .
+  #   command: python manage.py rqworker default
+  #   environment:
+  #     DEBUG: 1
+  #   volumes:
+  #     - .:/app
+  #   depends_on:
+  #     - app
+      
 volumes:
   dbvolume:
   static:

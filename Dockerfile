@@ -3,6 +3,7 @@ WORKDIR /app
 
 ENV PATH="/scripts:${PATH}"
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
 
 COPY ./requirements.txt requirements.txt
 RUN pip3 install --upgrade pip
@@ -22,11 +23,14 @@ RUN apk del .tmp
 # RUN chown -R user:user /vol
 # RUN chmod -R 755 /vol/web
 # USER user
-COPY . .
-# COPY entrypoint.sh .
+# ENV DOCKER_DEFAULT_PLATFORM=linux/amd64
 
-CMD python manage.py migrate --no-input && \
-    python manage.py collectstatic --no-input %% \
+COPY . .
+COPY ./entrypoint.sh /entrypoint.sh
+
+RUN python manage.py collectstatic --noinput
+# CMD python manage.py migrate --noinput && \
+    # python manage.py collectstatic --noinput %% \
 # gunicorn core.wsgi:application --workers 4 --bind 0.0.0.0:8000
-    gunicorn core.wsgi:application --bind 0.0.0.0:$PORT
-# CMD ["entrypoint.sh"]
+    # gunicorn core.wsgi:application workers 4 --bind 0.0.0.0:$PORT
+CMD ["sh","entrypoint.sh"]
